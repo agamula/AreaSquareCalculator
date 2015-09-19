@@ -40,7 +40,7 @@ public class SelectCategoryFragment extends ListFragment implements LoaderManage
     public void onLoadFinished(Loader<List<String>> loader, List<String> strings) {
         if(loader.getId() == LOAD_CATEGORIES_LOADER_ID && isAdded()) {
             Activity activity = getActivity();
-            getView().setBackgroundColor(getResources().getColor(R.color.app_color));
+            getView().setBackgroundColor(getResources().getColor(R.color.drawer_color));
             setListAdapter(new ArrayAdapter<>(activity, R.layout.item_select_category, R.id
                     .select_category_text, strings));
         }
@@ -56,8 +56,13 @@ public class SelectCategoryFragment extends ListFragment implements LoaderManage
                 activity.closeDrawer();
                 break;
             case 1:
+                activity = (MainActivity) getActivity();
+                activity.popAllDefaultContainer();
+                activity.startFragmentToDefaultContainer(new CalculatePpmSimpleFragment(), false);
+                activity.closeDrawer();
                 break;
             case 2:
+                //TODO need to implement
                 break;
         }
     }

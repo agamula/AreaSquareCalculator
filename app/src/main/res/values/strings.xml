@@ -23,4 +23,13 @@
     <string name="calculate_square">Calculate Square</string>
     <string name="select_csv_data_file">Please select csv data file.</string>
     <string name="result">Result</string>
+    <string name="enter_avg_square">Enter avg square value:</string>
+    <string name="calculate_ppm_simple">Calculate ppm</string>
+    <string name="known_ppm">Known ppms:</string>
+    <string name="first_test">1-st test</string>
+    <string name="second_test">2-nd test</string>
+    <string name="third_test">3-rd test</string>
+    <string name="fourth_test">4-th test</string>
+    <string name="avg_data_recalculate">Avg calculate</string>
+    <string name="avg_data_result">Avg values</string>
 </resources>

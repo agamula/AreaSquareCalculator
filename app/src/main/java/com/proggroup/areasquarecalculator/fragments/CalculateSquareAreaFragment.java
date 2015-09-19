@@ -16,6 +16,7 @@ import com.lamerman.FileDialog;
 import com.lamerman.SelectionMode;
 import com.proggroup.approximatecalcs.CalculateUtils;
 import com.proggroup.areasquarecalculator.R;
+import com.proggroup.areasquarecalculator.utils.FloatFormatter;
 
 import java.io.File;
 
@@ -41,7 +42,7 @@ public class CalculateSquareAreaFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity().getBaseContext(), FileDialog.class);
                 intent.putExtra(FileDialog.START_PATH, Environment.getExternalStorageDirectory()
-                         .getAbsolutePath());
+                        .getAbsolutePath());
                 intent.putExtra(FileDialog.SELECTION_MODE, SelectionMode.MODE_OPEN);
 
                 intent.putExtra(FileDialog.FORMAT_FILTER, new String[]{"csv"});
@@ -60,7 +61,7 @@ public class CalculateSquareAreaFragment extends Fragment {
                     float res = CalculateUtils.calculateSquare(mInputFile);
                     //res = CalculateUtils.calculateSquareDeterminant(mInputFile);
                     //res = CalculateUtils.calculateSquareDeterminantParallel(mInputFile);
-                    mResult.setText(String.format("%.4f", res));
+                    mResult.setText(FloatFormatter.format(res));
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.select_csv_data_file), Toast
                             .LENGTH_LONG).show();

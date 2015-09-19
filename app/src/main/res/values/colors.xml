@@ -2,5 +2,7 @@
 <resources>
     <color name="color_text">#405565</color>
     <color name="ab_background">#ffffed</color>
-    <color name="app_color">#dce5de</color>
+    <color name="drawer_color">#dce5de</color>
+    <color name="app_background">#fffbfb</color>
+    <color name="header_color">#bababa</color>
 </resources>

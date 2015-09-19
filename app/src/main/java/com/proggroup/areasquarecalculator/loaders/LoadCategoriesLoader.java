@@ -40,7 +40,7 @@ public class LoadCategoriesLoader extends AsyncTaskLoader<List<String>> {
             res = new ArrayList<>();
             res.add(resources.getString(R.string.test_calculate_square));
             res.add(resources.getString(R.string.test_simple_measure_material));
-            res.add(resources.getString(R.string.test_expanded_measure_material));
+            //res.add(resources.getString(R.string.test_expanded_measure_material));
             return res;
         } finally {
             synchronized (this) {

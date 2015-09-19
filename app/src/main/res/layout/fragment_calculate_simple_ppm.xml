@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/app_background"
+              android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <GridView
+                android:id="@+id/grid"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/grid_view_height"
+                android:stretchMode="columnWidth"
+                android:numColumns="7"
+                android:horizontalSpacing="1dp"
+                android:verticalSpacing="1dp"
+                android:layout_margin="@dimen/text_margin_default"/>
+
+            <LinearLayout
+                android:id="@+id/solve_line_equation_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/text_margin_default">
+
+                <Button
+                    android:id="@+id/solve_line_equation"
+                    style="@style/ButtonDefaultStyle"
+                    android:layout_width="wrap_content"/>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ProgressBar
+                        android:id="@+id/solve_progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="false"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/solved_formula"
+                        style="@style/TextViewDefaultStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/calculate_ppm_simple_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/text_margin_default"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextViewDefaultStyle"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:text="@string/enter_avg_square"/>
+
+                    <EditText
+                        android:id="@+id/avg_value"
+                        style="@style/EditTextDefaultStyle"
+                        android:layout_width="match_parent"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/result_ppm_simple"
+                        style="@style/TextViewDefaultStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/calculate_ppm_simple"
+                        style="@style/ButtonDefaultStyle"
+                        android:layout_width="wrap_content"
+                        android:text="@string/calculate_ppm_simple"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
