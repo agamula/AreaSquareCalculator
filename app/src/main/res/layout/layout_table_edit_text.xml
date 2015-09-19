@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/grid_view_item_height"
+    android:gravity="center_vertical"
+    android:background="@color/grid_item_bkg_color">
+
+    <EditText
+        android:id="@+id/edit"
+        style="@style/EditTextDefaultStyle"
+        android:layout_width="match_parent"
+        android:layout_margin="2dp"
+        android:background="@drawable/grid_edit_drawable"
+        android:singleLine="true"/>
+</LinearLayout>

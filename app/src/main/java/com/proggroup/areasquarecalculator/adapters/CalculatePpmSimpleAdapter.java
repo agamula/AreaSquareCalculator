@@ -58,7 +58,28 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         if (convertView == null || convertView.getTag() != Integer.valueOf(itemId)) {
             LayoutInflater inflater = (LayoutInflater) InterpolationCalculator.getInstance().getApplicationContext
                     ().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.layout_table_header, parent, false);
+
+            switch (itemId) {
+                case ITEM_ID_HEADER:
+                    convertView = inflater.inflate(R.layout.layout_table_header, parent, false);
+                    break;
+                case ITEM_ID_KNOWN_PPM:
+                    convertView = inflater.inflate(R.layout.layout_table_edit_text, parent, false);
+                    break;
+                case ITEM_ID_CALC_AVG_RESULT:
+                    convertView = inflater.inflate(R.layout.layout_table_edit_text, parent, false);
+                    convertView.findViewById(R.id.edit).setEnabled(false);
+                    break;
+                case ITEM_ID_CALCULATE_AVG:
+                    convertView = inflater.inflate(R.layout.layout_table_avg_calculate, parent,
+                             false);
+                    break;
+                case ITEM_ID_DATA:
+                    convertView = inflater.inflate(R.layout.layout_table_item, parent, false);
+                    break;
+                default:
+                    convertView = inflater.inflate(R.layout.layout_table_header, parent, false);
+            }
 
             convertView.setTag(Integer.valueOf(itemId));
         }

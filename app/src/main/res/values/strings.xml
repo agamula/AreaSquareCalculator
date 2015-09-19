@@ -32,4 +32,5 @@
     <string name="fourth_test">4-th test</string>
     <string name="avg_data_recalculate">Avg calculate</string>
     <string name="avg_data_result">Avg values</string>
+    <string name="avg_item_calculate">Calc</string>
 </resources>

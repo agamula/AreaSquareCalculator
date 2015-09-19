@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/grid_view_item_height"
+              android:background="@color/grid_item_bkg_color"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <Button
+        android:id="@+id/calculate_avg"
+        style="@style/ButtonDefaultStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/button_height_small"
+        android:text="@string/avg_item_calculate"
+        android:layout_margin="1dp"
+        android:padding="0dp"
+        android:background="@drawable/button_drawable"
+        android:textSize="@dimen/button_text_size_small"/>
+</LinearLayout>

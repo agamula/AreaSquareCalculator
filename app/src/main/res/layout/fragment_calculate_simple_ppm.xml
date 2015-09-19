@@ -17,12 +17,13 @@
             <GridView
                 android:id="@+id/grid"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/grid_view_height"
+                android:layout_height="400dp"
                 android:stretchMode="columnWidth"
                 android:numColumns="7"
                 android:horizontalSpacing="1dp"
                 android:verticalSpacing="1dp"
-                android:layout_margin="@dimen/text_margin_default"/>
+                android:layout_margin="@dimen/text_margin_default"
+                android:background="@color/grid_color"/>
 
             <LinearLayout
                 android:id="@+id/solve_line_equation_layout"
