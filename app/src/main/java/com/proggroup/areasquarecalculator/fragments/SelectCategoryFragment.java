@@ -22,7 +22,7 @@ public class SelectCategoryFragment extends ListFragment implements LoaderManage
     private static final int LOAD_CATEGORIES_LOADER_ID = 0;
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(Activity context) {
         super.onAttach(context);
         getLoaderManager().initLoader(LOAD_CATEGORIES_LOADER_ID, null, this);
     }

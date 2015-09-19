@@ -11,27 +11,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PointHelper {
-    private static final String TABLE_NAME = "square_points";
+    private static final String TABLE_NAME = "points";
     private static final String POINT_X = "_x";
     private static final String POINT_Y = "_y";
 
-    public static final String CREATE_REQUEST = "create table if not exists " + TABLE_NAME +
-            "(" + BaseColumns._ID + " integer primary key autoincrement, "
+    public static final String CREATE_REQUEST = "create table " + TABLE_NAME +
+            " ( " + BaseColumns._ID + " integer primary key autoincrement, "
             + POINT_X + " integer not null, "
             + POINT_Y + " integer not null, "
             + SquarePointHelper.ID + " integer not null);";
     public static final String DROP_REQUEST = "drop table if exists" + TABLE_NAME;
 
-    private SQLiteDatabase writeDb, readDb;
+    private SQLiteDatabase writeDb;
 
-    public PointHelper(SQLiteHelper helper) {
-        writeDb = helper.getWritableDatabase();
-        readDb = helper.getReadableDatabase();
+    public PointHelper(SQLiteDatabase writeDb) {
+        this.writeDb = writeDb;
     }
 
     public List<Point> getPoints(int squarePointId) {
-        Cursor cursor = readDb.query(TABLE_NAME, new String[] {POINT_X, POINT_Y},
-                SquarePointHelper.ID + " = ?", new String[] {"" + squarePointId}, null, null, null);
+        Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{POINT_X, POINT_Y},
+                SquarePointHelper.ID + " = ?", new String[]{"" + squarePointId}, null, null, null);
 
         if (cursor.moveToFirst()) {
             List<Point> res = new ArrayList<>(cursor.getCount());

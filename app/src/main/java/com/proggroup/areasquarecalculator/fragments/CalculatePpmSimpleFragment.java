@@ -1,5 +1,7 @@
 package com.proggroup.areasquarecalculator.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,10 +11,12 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.lamerman.FileDialog;
 import com.proggroup.areasquarecalculator.InterpolationCalculator;
 import com.proggroup.areasquarecalculator.R;
 import com.proggroup.areasquarecalculator.adapters.CalculatePpmSimpleAdapter;
 import com.proggroup.areasquarecalculator.data.PrefConstants;
+import com.proggroup.areasquarecalculator.data.Project;
 import com.proggroup.areasquarecalculator.utils.FloatFormatter;
 
 public class CalculatePpmSimpleFragment extends Fragment{
@@ -21,6 +25,7 @@ public class CalculatePpmSimpleFragment extends Fragment{
     private View calculatePpmLayout, solveEquationLayout;
     private float lineCoefficient;
     private TextView solvedFormula;
+    private CalculatePpmSimpleAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,9 +37,9 @@ public class CalculatePpmSimpleFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
         mGridView = (GridView) view.findViewById(R.id.grid);
 
-        mGridView.setAdapter(new CalculatePpmSimpleAdapter());
+        adapter = new CalculatePpmSimpleAdapter(this);
 
-
+        mGridView.setAdapter(adapter);
 
         solveEquationLayout = view.findViewById(R.id.solve_line_equation_layout);
         solvedFormula = (TextView) view.findViewById(R.id.solved_formula);
@@ -50,6 +55,15 @@ public class CalculatePpmSimpleFragment extends Fragment{
             calculatePpmLayout.setVisibility(View.VISIBLE);
         } else {
             solveEquationLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == Activity.RESULT_OK) {
+            int row = requestCode / Project.SIMPLE_MEASURE_AVG_POINTS_COUNT;
+            int col = requestCode % Project.SIMPLE_MEASURE_AVG_POINTS_COUNT;
+            adapter.updateSquare(row, col, data.getStringExtra(FileDialog.RESULT_PATH));
         }
     }
 }

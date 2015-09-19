@@ -20,7 +20,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(AvgPointHelper.CREATE_REQUEST);
         db.execSQL(ProjectHelper.CREATE_REQUEST);
 
-        new ProjectHelper(this).startInit();
+        new ProjectHelper(null).startInit(db);
     }
 
     @Override

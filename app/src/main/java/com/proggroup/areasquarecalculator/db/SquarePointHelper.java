@@ -3,7 +3,9 @@ package com.proggroup.areasquarecalculator.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.BaseColumns;
 
+import com.proggroup.areasquarecalculator.data.AvgPoint;
 import com.proggroup.areasquarecalculator.data.Project;
 
 import java.util.ArrayList;
@@ -13,22 +15,19 @@ public class SquarePointHelper {
     private static final String TABLE_NAME = "square_points";
     public static final String ID = "_square_point_id";
 
-    public static final String CREATE_REQUEST = "create table if not exists " + TABLE_NAME +
-            "(" + ID + " integer primary key autoincrement, "
+    public static final String CREATE_REQUEST = "create table " + TABLE_NAME +
+            " ( " + BaseColumns._ID + " integer primary key autoincrement, "
             + AvgPointHelper.ID + " integer not null);";
     public static final String DROP_REQUEST = "drop table if exists" + TABLE_NAME;
 
-    private SQLiteDatabase writeDb, readDb;
-    private SQLiteHelper helper;
+    private SQLiteDatabase writeDb;
 
-    public SquarePointHelper(SQLiteHelper helper) {
-        this.helper = helper;
-        writeDb = helper.getWritableDatabase();
-        readDb = helper.getReadableDatabase();
+    public SquarePointHelper(SQLiteDatabase writeDb) {
+        this.writeDb = writeDb;
     }
 
     public List<Integer> getSquarePointIds(int avgPointId) {
-        Cursor cursor = readDb.query(TABLE_NAME, new String[]{ID},
+        Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{BaseColumns._ID},
                 AvgPointHelper.ID + " = ?", new String[]{"" + avgPointId}, null, null, null);
 
         if (cursor.moveToFirst()) {
@@ -62,8 +61,8 @@ public class SquarePointHelper {
     }
 
     private int getAvgPointId(int squarePointId) {
-        Cursor cursor = readDb.query(TABLE_NAME, new String[]{AvgPointHelper.ID},
-                ID + " = ?", new String[]{"" + squarePointId}, null, null, null);
+        Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{AvgPointHelper.ID},
+                BaseColumns._ID + " = ?", new String[]{"" + squarePointId}, null, null, null);
 
         if (cursor.moveToFirst()) {
             cursor.close();
@@ -82,7 +81,7 @@ public class SquarePointHelper {
                 return;
             }
         }
-        new PointHelper(helper).deletePoints(id);
-        writeDb.delete(TABLE_NAME, ID + " = ?", new String[]{id + ""});
+        new PointHelper(writeDb).deletePoints(id);
+        writeDb.delete(TABLE_NAME, BaseColumns._ID + " = ?", new String[]{id + ""});
     }
 }

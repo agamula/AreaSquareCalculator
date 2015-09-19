@@ -3,6 +3,7 @@ package com.proggroup.areasquarecalculator.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.BaseColumns;
 
 import com.proggroup.areasquarecalculator.data.Project;
 
@@ -10,23 +11,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectHelper {
-    public static final String CREATE_REQUEST = "create table if not exists " + Project.TABLE_NAME +
-            "(" + Project.ID + " integer primary key autoincrement, "
+    public static final String CREATE_REQUEST = "create table " + Project.TABLE_NAME +
+            " ( " + BaseColumns._ID + " integer primary key autoincrement, "
             + Project.IS_SIMPLE_MEASURE + " integer not null);";
     public static final String DROP_REQUEST = "drop table if exists" + Project.TABLE_NAME;
 
-    private SQLiteDatabase writeDb, readDb;
-    private SQLiteHelper helper;
+    private SQLiteDatabase writeDb;
 
-    public ProjectHelper(SQLiteHelper helper) {
-        this.helper = helper;
-        writeDb = helper.getWritableDatabase();
-        readDb = helper.getReadableDatabase();
+    public ProjectHelper(SQLiteDatabase writeDb) {
+        if(writeDb != null) {
+            this.writeDb = writeDb;
+        }
     }
 
     public void startInit() {
         addProject(true);
         addProject(false);
+    }
+
+    public void startInit(SQLiteDatabase writeDb) {
+        this.writeDb = writeDb;
+        startInit();
     }
 
     public Project addProject(boolean isSimpleMeasure) {
@@ -40,17 +45,18 @@ public class ProjectHelper {
     }
 
     public void deleteProject(Project project) {
-        AvgPointHelper avgPointHelper = new AvgPointHelper(helper, project);
+        AvgPointHelper avgPointHelper = new AvgPointHelper(writeDb, project);
         for (int id : avgPointHelper.getAvgPoints()) {
             avgPointHelper.deleteAvgPoint(id);
         }
-        writeDb.delete(Project.TABLE_NAME, Project.ID + " = ?", new String[] {project.getId() +
+        writeDb.delete(Project.TABLE_NAME, BaseColumns._ID + " = ?", new String[] {project.getId() +
                 ""});
     }
 
     public List<Project> getProjects() {
-        Cursor cursor = readDb.query(Project.TABLE_NAME, new String[]{Project.ID, Project
-                         .IS_SIMPLE_MEASURE}, null, null, null, null, null);
+        Cursor cursor = writeDb/*readDb*/.query(Project.TABLE_NAME, new String[]{BaseColumns._ID,
+                Project
+                .IS_SIMPLE_MEASURE}, null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             List<Project> res = new ArrayList<>(cursor.getCount());
