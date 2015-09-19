@@ -1,4 +1,26 @@
 <resources>
-    <string name="app_name">AreaSquareCalculator</string>
+    <string name="location">Location</string>
+    <string name="cant_read_folder">folder can\'t be read!</string>
+    <string name="nnew">New</string>
+    <string name="select">Select</string>
+    <string name="file_name">File name:</string>
+    <string name="cancel">Cancel</string>
+    <string name="create">Save</string>
+    <string name="no_data">No Data</string>
+    <color name="gray">#ffff0000</color>
+    <string name="err">Error</string>
 
+
+    <string name="app_name">InterpolationCalculator</string>
+    <string name="drawer_cont_desc_open">Open drawer</string>
+    <string name="drawer_cont_desc_close">Close drawer</string>
+
+    <string name="test_calculate_square">Test square calculation</string>
+    <string name="test_simple_measure_material">Test simple measure material</string>
+    <string name="test_expanded_measure_material">Test expanded measure material</string>
+
+    <string name="select_file">Select file</string>
+    <string name="calculate_square">Calculate Square</string>
+    <string name="select_csv_data_file">Please select csv data file.</string>
+    <string name="result">Result</string>
 </resources>

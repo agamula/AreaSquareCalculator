@@ -1,4 +1,4 @@
-package com.proggroup.areasquarecalculator;
+package com.proggroup.areasquarecalculator.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -7,20 +7,18 @@ import android.graphics.Point;
 import android.os.Environment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.proggroup.approximatecalcs.CalculateUtils;
+import com.proggroup.areasquarecalculator.R;
 
 import java.io.File;
-import java.nio.channels.Pipe;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivityOld extends AppCompatActivity {
 
     private EditText mResultEdit;
     private Button mSetPointsButton;
@@ -31,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.main);
+        setContentView(R.layout.main_old);
 
         points = new ArrayList<>();
 

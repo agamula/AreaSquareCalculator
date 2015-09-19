@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <EditText
+        android:layout_width="match_parent"
+        style="@style/EditTextDefaultStyle"
+        android:id="@+id/path_to_file"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        style="@style/ButtonDefaultStyle"
+        android:id="@+id/select_path"
+        android:text="@string/select_file"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        style="@style/ButtonDefaultStyle"
+        android:id="@+id/calculate_square"
+        android:text="@string/calculate_square"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/TextViewDefaultStyle"
+        android:text="@string/result"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        style="@style/EditTextDefaultStyle"
+        android:id="@+id/result"
+        android:singleLine="true"/>
+</LinearLayout>

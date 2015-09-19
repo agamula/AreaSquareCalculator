@@ -1,8 +1,26 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    </style>
+
+    <style name="TextViewDefaultStyle">
+        <item name="android:textSize">@dimen/text_size_default</item>
+        <item name="android:textColor">@color/color_text</item>
+        <item name="android:layout_margin">@dimen/text_margin_default</item>
+    </style>
+
+    <style name="EditTextDefaultStyle">
+        <item name="android:textSize">@dimen/edit_text_size_default</item>
+        <item name="android:textColor">@color/color_text</item>
+        <item name="android:layout_margin">@dimen/text_margin_default</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ButtonDefaultStyle">
+        <item name="android:layout_height">@dimen/button_height_default</item>
+        <item name="android:textColor">@color/color_text</item>
+        <item name="android:layout_margin">@dimen/text_margin_default</item>
+        <item name="android:textSize">@dimen/edit_text_size_default</item>
     </style>
 
 </resources>
