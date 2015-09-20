@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -55,9 +56,11 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
     private final SQLiteDatabase mDatabase;
     private final Fragment fragment;
     private int ppmIndex;
+    private final OnInfoFilledListener onInfoFilledListener;
 
-    public CalculatePpmSimpleAdapter(Fragment fragment) {
+    public CalculatePpmSimpleAdapter(Fragment fragment, OnInfoFilledListener onInfoFilledListener) {
         this.fragment = fragment;
+        this.onInfoFilledListener = onInfoFilledListener;
         SQLiteHelper helper = InterpolationCalculator.getInstance().getSqLiteHelper();
         mDatabase = helper.getWritableDatabase();
         project = new ProjectHelper(mDatabase).getProjects().get(0);
@@ -121,6 +124,8 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         }
 
         ppmIndex = -1;
+
+        checkAvgValues();
     }
 
     @Override
@@ -196,6 +201,18 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 if (ppmText.getTag() != null) {
                     ppmText.removeTextChangedListener(new PpmWatcher((Integer) ppmText.getTag()));
                 }
+
+                ppmText.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                            case MotionEvent.ACTION_DOWN:
+                                ppmIndex = (Integer) v.getTag();
+                                break;
+                        }
+                        return false;
+                    }
+                });
 
                 ppmText.setTag(index);
                 ppmText.addTextChangedListener(new PpmWatcher(index));
@@ -352,6 +369,8 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
             avgValues.set(row, new AvgPoint(squares).avg());
         }
 
+        checkAvgValues();
+
         int squareId = squarePointHelper.getSquarePointIds(avgPointIds.get(row)).get(column);
 
         PointHelper pointHelper = new PointHelper(mDatabase);
@@ -367,6 +386,19 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
         paths.get(row).set(column, path);
         notifyDataSetChanged();
+    }
+
+    private void checkAvgValues() {
+        for (float avgValue : avgValues) {
+            if(avgValue == 0f) {
+                return;
+            }
+        }
+        onInfoFilledListener.onInfoFilled();
+    }
+
+    public interface OnInfoFilledListener {
+        void onInfoFilled();
     }
 
     private class PpmWatcher implements TextWatcher {
@@ -395,8 +427,6 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
             } else {
                 avgPointHelper.updatePpm(avgPointId, 0);
             }
-
-            ppmIndex = index;
 
             notifyDataSetChanged();
         }

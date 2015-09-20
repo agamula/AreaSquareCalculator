@@ -35,4 +35,7 @@
     <string name="avg_item_calculate">Calc</string>
     <string name="csv">Csv</string>
     <string name="input_ppm_first">Input ppm first</string>
+    <string name="solve_equation">Solve equation</string>
+    <string name="equation_value" formatted="false">y = %s*x</string>
+    <string name="input_avg_value">Input avg value</string>
 </resources>

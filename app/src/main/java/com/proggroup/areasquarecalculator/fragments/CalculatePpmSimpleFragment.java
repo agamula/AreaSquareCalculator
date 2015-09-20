@@ -3,29 +3,46 @@ package com.proggroup.areasquarecalculator.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lamerman.FileDialog;
+import com.proggroup.approximatecalcs.CalculateUtils;
 import com.proggroup.areasquarecalculator.InterpolationCalculator;
 import com.proggroup.areasquarecalculator.R;
 import com.proggroup.areasquarecalculator.adapters.CalculatePpmSimpleAdapter;
+import com.proggroup.areasquarecalculator.data.AvgPoint;
 import com.proggroup.areasquarecalculator.data.PrefConstants;
 import com.proggroup.areasquarecalculator.data.Project;
+import com.proggroup.areasquarecalculator.db.AvgPointHelper;
+import com.proggroup.areasquarecalculator.db.PointHelper;
+import com.proggroup.areasquarecalculator.db.ProjectHelper;
+import com.proggroup.areasquarecalculator.db.SQLiteHelper;
+import com.proggroup.areasquarecalculator.db.SquarePointHelper;
 import com.proggroup.areasquarecalculator.utils.FloatFormatter;
 
-public class CalculatePpmSimpleFragment extends Fragment{
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpmSimpleAdapter.OnInfoFilledListener {
 
     private GridView mGridView;
     private View calculatePpmLayout, solveEquationLayout;
-    private float lineCoefficient;
-    private TextView solvedFormula;
+    private TextView solvedFormula, solvedPpm;
+    private EditText avgValue;
     private CalculatePpmSimpleAdapter adapter;
+    private View solveLineEquation, calculatePpmSimple;
+    private View progressLayout;
+    private float lineKoef;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,33 +54,122 @@ public class CalculatePpmSimpleFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
         mGridView = (GridView) view.findViewById(R.id.grid);
 
-        adapter = new CalculatePpmSimpleAdapter(this);
-
-        mGridView.setAdapter(adapter);
-
         solveEquationLayout = view.findViewById(R.id.solve_line_equation_layout);
+
+        progressLayout = view.findViewById(R.id.solve_progress);
+
+        solveLineEquation = view.findViewById(R.id.solve_line_equation);
+        solveLineEquation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressLayout.setVisibility(View.VISIBLE);
+                SQLiteHelper helper = InterpolationCalculator.getInstance().getSqLiteHelper();
+                SQLiteDatabase writeDb = helper.getWritableDatabase();
+                Project project = new ProjectHelper(writeDb).getProjects().get(0);
+
+                AvgPointHelper helper1 = new AvgPointHelper(writeDb, project);
+                List<Integer> avgids = helper1.getAvgPoints();
+
+                SquarePointHelper pointHelper = new SquarePointHelper(writeDb);
+                PointHelper pHelper = new PointHelper(writeDb);
+
+                float maxKoef = -1f, minKoef = -1f;
+
+                for (int avgId : avgids) {
+                    float ppm = helper1.getPpmValue(avgId);
+                    List<Integer> sqIds = pointHelper.getSquarePointIds(avgId);
+
+                    List<Float> squares = new ArrayList<>(sqIds.size());
+
+                    for (int i = 0; i < sqIds.size(); i++) {
+                        squares.add(CalculateUtils.calculateSquare(pHelper.getPoints(sqIds.get(i)
+                        )));
+                    }
+                    float y = new AvgPoint(squares).avg();
+
+                    if (maxKoef == -1f) {
+                        maxKoef = minKoef = y / ppm;
+                    } else {
+                        float curKoef = y / ppm;
+                        if (maxKoef < curKoef) {
+                            maxKoef = curKoef;
+                        } else if (minKoef > curKoef) {
+                            minKoef = curKoef;
+                        }
+                    }
+                }
+
+                double minAngle = Math.atan(minKoef);
+                double maxAngle = Math.atan(maxKoef);
+
+                lineKoef = (float)Math.tan((minAngle + maxAngle) / 2);
+
+                solvedFormula.setText(String.format(Locale.US, getString(R.string.equation_value), FloatFormatter.format(
+                        lineKoef)));
+
+                InterpolationCalculator.getInstance().getSharedPreferences().edit().putFloat
+                        (PrefConstants.LINE_KOEF, lineKoef).apply();
+
+                progressLayout.setVisibility(View.GONE);
+                calculatePpmLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
+
         solvedFormula = (TextView) view.findViewById(R.id.solved_formula);
 
         calculatePpmLayout = view.findViewById(R.id.calculate_ppm_simple_layout);
 
+        calculatePpmSimple = view.findViewById(R.id.calculate_ppm_simple);
+        calculatePpmSimple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(avgValue.getText().toString().isEmpty()) {
+                    Toast.makeText(getActivity(), R.string.input_avg_value, Toast.LENGTH_LONG)
+                             .show();
+                    return;
+                }
+                float avgValueY = Float.parseFloat(avgValue.getText().toString());
+                solvedPpm.setText(FloatFormatter.format(avgValueY / lineKoef));
+            }
+        });
+
+        solvedPpm = (TextView) view.findViewById(R.id.result_ppm_simple);
+
+        avgValue = (EditText) view.findViewById(R.id.avg_value);
+
         SharedPreferences prefs = InterpolationCalculator.getInstance().getSharedPreferences();
 
-        if(prefs.contains(PrefConstants.LINE_KOEF)) {
+        if (prefs.contains(PrefConstants.INFO_IS_READY)) {
             solveEquationLayout.setVisibility(View.VISIBLE);
-            lineCoefficient = prefs.getFloat(PrefConstants.LINE_KOEF, 0f);
-            solvedFormula.setText("y = " + FloatFormatter.format(lineCoefficient) + "*x");
-            calculatePpmLayout.setVisibility(View.VISIBLE);
         } else {
             solveEquationLayout.setVisibility(View.GONE);
         }
+
+        if (prefs.contains(PrefConstants.LINE_KOEF)) {
+            lineKoef = prefs.getFloat(PrefConstants.LINE_KOEF, 0f);
+            solvedFormula.setText(String.format(Locale.US, getString(R.string.equation_value), FloatFormatter.format(                  lineKoef)));
+            calculatePpmLayout.setVisibility(View.VISIBLE);
+        }
+
+        adapter = new CalculatePpmSimpleAdapter(this, this);
+
+        mGridView.setAdapter(adapter);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             int row = requestCode / Project.SIMPLE_MEASURE_AVG_POINTS_COUNT;
             int col = requestCode % Project.SIMPLE_MEASURE_AVG_POINTS_COUNT;
             adapter.updateSquare(row, col, data.getStringExtra(FileDialog.RESULT_PATH));
         }
+    }
+
+    @Override
+    public void onInfoFilled() {
+        InterpolationCalculator.getInstance().getSharedPreferences().edit().putBoolean
+                (PrefConstants.INFO_IS_READY, true).apply();
+        solveEquationLayout.setVisibility(View.VISIBLE);
     }
 }
