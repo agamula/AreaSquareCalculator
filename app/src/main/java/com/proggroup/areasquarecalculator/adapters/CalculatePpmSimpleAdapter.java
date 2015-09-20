@@ -15,10 +15,12 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lamerman.FileDialog;
 import com.lamerman.SelectionMode;
 import com.proggroup.approximatecalcs.CalculateUtils;
+import com.proggroup.approximatecalcs.DocParser;
 import com.proggroup.approximatecalcs.data.Point;
 import com.proggroup.areasquarecalculator.InterpolationCalculator;
 import com.proggroup.areasquarecalculator.R;
@@ -52,6 +54,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
     private List<List<String>> paths;
     private final SQLiteDatabase mDatabase;
     private final Fragment fragment;
+    private int ppmIndex;
 
     public CalculatePpmSimpleAdapter(Fragment fragment) {
         this.fragment = fragment;
@@ -73,7 +76,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
         if (isFirstInit) {
             for (int avgPoint : avgPointIds) {
-                squarePointHelper.addSquarePointIdSimpleMeasure(avgPoint);
+                for (int i = 0; i < Project.SIMPLE_MEASURE_AVG_POINTS_COUNT; i++) {
+                    squarePointHelper.addSquarePointIdSimpleMeasure(avgPoint);
+                }
             }
         }
 
@@ -114,6 +119,8 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
             }
             paths.add(pathes);
         }
+
+        ppmIndex = -1;
     }
 
     @Override
@@ -194,7 +201,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 ppmText.addTextChangedListener(new PpmWatcher(index));
 
                 float ppmValue = avgPointHelper.getPpmValue(avgPointIds.get(index));
-                if (ppmValue != 0) {
+                if (ppmValue != 0 && index != ppmIndex) {
                     ppmText.setText(FloatFormatter.format(ppmValue));
                 }
                 break;
@@ -231,10 +238,12 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         for (int i = 0; i < paths.size(); i++) {
                             if (paths.get(indexAvg).get(i) != null) {
-                                float val = CalculateUtils.calculateSquare(new File(paths.get
-                                        (indexAvg).get(i)));
-                                if (val > 0f) {
-                                    squareValues.get(indexAvg).set(i, val);
+                                File f = new File(paths.get(indexAvg).get(i));
+                                if(f.exists()) {
+                                    float val = CalculateUtils.calculateSquare(f);
+                                    if (val > 0f) {
+                                        squareValues.get(indexAvg).set(i, val);
+                                    }
                                 }
                             }
                         }
@@ -261,7 +270,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                     path.removeTextChangedListener(new PathChangeWatcher(row, col));
                 }
 
-                path.setTag(index1 * Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + pointNumber);
+                int pathTag = index1 * Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + pointNumber;
+
+                path.setTag(pathTag);
 
                 path.addTextChangedListener(new PathChangeWatcher(index1, pointNumber));
 
@@ -286,11 +297,18 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 }
 
                 View csvView = convertView.findViewById(R.id.csv);
-                csvView.setTag(path.getTag());
 
                 csvView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Integer tag = (Integer) v.getTag();
+
+                        if(tag < 0) {
+                            Toast.makeText(fragment.getActivity(), R.string.input_ppm_first,
+                                    Toast.LENGTH_LONG).show();
+                            return;
+                        }
+
                         Intent intent = new Intent(fragment.getActivity().getBaseContext(), FileDialog
                                 .class);
                         intent.putExtra(FileDialog.START_PATH, Environment.getExternalStorageDirectory()
@@ -298,9 +316,17 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                         intent.putExtra(FileDialog.SELECTION_MODE, SelectionMode.MODE_OPEN);
 
                         intent.putExtra(FileDialog.FORMAT_FILTER, new String[]{"csv"});
-                        fragment.startActivityForResult(intent, (Integer) v.getTag());
+                        fragment.startActivityForResult(intent, tag);
                     }
                 });
+
+                ppmValue = avgPointHelper.getPpmValue(avgPointIds.get(index1));
+
+                if(ppmValue == 0f) {
+                    csvView.setTag(-pathTag - 1);
+                } else {
+                    csvView.setTag(pathTag);
+                }
 
                 break;
         }
@@ -309,7 +335,36 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
     }
 
     public void updateSquare(int row, int column, String path) {
-        squareValues.get(row).set(column, CalculateUtils.calculateSquare(new File(path)));
+        List<Float> squares = squareValues.get(row);
+        File f = new File(path);
+        squares.set(column, CalculateUtils.calculateSquare(f));
+
+        boolean inited = true;
+
+        for (float square : squares) {
+            if(square == 0f) {
+                inited = false;
+                break;
+            }
+        }
+
+        if(inited) {
+            avgValues.set(row, new AvgPoint(squares).avg());
+        }
+
+        int squareId = squarePointHelper.getSquarePointIds(avgPointIds.get(row)).get(column);
+
+        PointHelper pointHelper = new PointHelper(mDatabase);
+
+        List<Point> points = DocParser.parse(f);
+
+        List<Point> dbPoints = pointHelper.getPoints(squareId);
+        if(dbPoints.isEmpty()) {
+            pointHelper.addPoints(squareId, points);
+        } else {
+            pointHelper.updatePoints(squareId, points);
+        }
+
         paths.get(row).set(column, path);
         notifyDataSetChanged();
     }
@@ -340,6 +395,10 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
             } else {
                 avgPointHelper.updatePpm(avgPointId, 0);
             }
+
+            ppmIndex = index;
+
+            notifyDataSetChanged();
         }
 
         @Override
