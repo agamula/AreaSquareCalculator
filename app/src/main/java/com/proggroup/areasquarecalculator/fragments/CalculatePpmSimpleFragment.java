@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -102,7 +103,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 double minAngle = Math.atan(minKoef);
                 double maxAngle = Math.atan(maxKoef);
 
-                lineKoef = (float)Math.tan((minAngle + maxAngle) / 2);
+                lineKoef = (float) Math.tan((minAngle + maxAngle) / 2);
 
                 solvedFormula.setText(String.format(Locale.US, getString(R.string.equation_value), FloatFormatter.format(
                         lineKoef)));
@@ -124,13 +125,14 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         calculatePpmSimple.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(avgValue.getText().toString().isEmpty()) {
+                if (avgValue.getText().toString().isEmpty()) {
                     Toast.makeText(getActivity(), R.string.input_avg_value, Toast.LENGTH_LONG)
-                             .show();
+                            .show();
                     return;
                 }
                 float avgValueY = Float.parseFloat(avgValue.getText().toString());
-                solvedPpm.setText(FloatFormatter.format(avgValueY / lineKoef));
+                //solvedPpm.setText(FloatFormatter.format(avgValueY / lineKoef));
+                solvedPpm.setText(FloatFormatter.format(getXbyY(avgValueY)));
             }
         });
 
@@ -148,13 +150,55 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
 
         if (prefs.contains(PrefConstants.LINE_KOEF)) {
             lineKoef = prefs.getFloat(PrefConstants.LINE_KOEF, 0f);
-            solvedFormula.setText(String.format(Locale.US, getString(R.string.equation_value), FloatFormatter.format(                  lineKoef)));
+            solvedFormula.setText(String.format(Locale.US, getString(R.string.equation_value), FloatFormatter.format(lineKoef)));
             calculatePpmLayout.setVisibility(View.VISIBLE);
         }
 
         adapter = new CalculatePpmSimpleAdapter(this, this);
 
         mGridView.setAdapter(adapter);
+    }
+
+    private float getXbyY(float y) {
+        List<Float> xPoints = new ArrayList<>();
+        List<Float> yPoints = new ArrayList<>();
+
+        SQLiteHelper helper = InterpolationCalculator.getInstance().getSqLiteHelper();
+        SQLiteDatabase writeDb = helper.getWritableDatabase();
+        Project project = new ProjectHelper(writeDb).getProjects().get(0);
+        AvgPointHelper helper1 = new AvgPointHelper(writeDb, project);
+        List<Integer> avgids = helper1.getAvgPoints();
+
+        SquarePointHelper pointHelper = new SquarePointHelper(writeDb);
+        PointHelper pHelper = new PointHelper(writeDb);
+
+        for (int avgId : avgids) {
+            xPoints.add(helper1.getPpmValue(avgId));
+            List<Integer> sqIds = pointHelper.getSquarePointIds(avgId);
+
+            List<Float> squares = new ArrayList<>(sqIds.size());
+
+            for (int i = 0; i < sqIds.size(); i++) {
+                squares.add(CalculateUtils.calculateSquare(pHelper.getPoints(sqIds.get(i)
+                )));
+            }
+            yPoints.add(new AvgPoint(squares).avg());
+        }
+
+        for (int i = 0; i < yPoints.size() - 1; i++) {
+            //check whether the point belongs to the line
+            if (y >= yPoints.get(i) && y <= yPoints.get(i + 1)) {
+                //getting x value
+                float x1 = xPoints.get(i);
+                float x2 = xPoints.get(i + 1);
+                float y1 = yPoints.get(i);
+                float y2 = yPoints.get(i + 1);
+
+                return ((y - y1) * (x2 - x1)) / (y2 - y1) + x1;
+            }
+        }
+
+        return -1;
     }
 
     @Override
