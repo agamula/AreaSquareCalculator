@@ -268,7 +268,15 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                                 }
                             }
                         }
-                        avgValues.set(indexAvg, new AvgPoint(squareValues.get(indexAvg)).avg());
+                        List<Float> values = squareValues.get(indexAvg);
+                        List<Float> res = new ArrayList<>(values.size());
+                        for (float val : values) {
+                            if(val != 0f) {
+                                res.add(val);
+                            }
+                        }
+
+                        avgValues.set(indexAvg, new AvgPoint(res).avg());
                         indexesClicked.set(indexAvg, true);
                         notifyDataSetChanged();
                     }
@@ -370,7 +378,13 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         }
 
         if(inited) {
-            avgValues.set(row, new AvgPoint(squares).avg());
+            List<Float> res = new ArrayList<>(squares.size());
+            for (float val : squares) {
+                if(val != 0f) {
+                    res.add(val);
+                }
+            }
+            avgValues.set(row, new AvgPoint(res).avg());
         }
 
         checkAvgValues();
