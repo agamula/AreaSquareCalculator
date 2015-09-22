@@ -31,7 +31,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="@dimen/text_margin_default">
+                android:layout_marginTop="@dimen/text_margin_default"
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/solve_line_equation"

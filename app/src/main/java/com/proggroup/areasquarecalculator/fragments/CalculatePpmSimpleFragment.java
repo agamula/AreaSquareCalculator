@@ -154,14 +154,15 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         SharedPreferences prefs = InterpolationCalculator.getInstance().getSharedPreferences();
 
         if (prefs.contains(PrefConstants.INFO_IS_READY)) {
-            solveEquationLayout.setVisibility(View.VISIBLE);
+            calculatePpmLayout.setVisibility(View.VISIBLE);
         } else {
-            solveEquationLayout.setVisibility(View.GONE);
+            calculatePpmLayout.setVisibility(View.GONE);
         }
 
         if (prefs.contains(PrefConstants.LINE_KOEF)) {
             lineKoef = prefs.getFloat(PrefConstants.LINE_KOEF, 0f);
-            solvedFormula.setText(String.format(Locale.US, getString(R.string.equation_value), FloatFormatter.format(lineKoef)));
+            //solvedFormula.setText(String.format(Locale.US, getString(R.string.equation_value), FloatFormatter.format
+             //       (lineKoef)));
             calculatePpmLayout.setVisibility(View.VISIBLE);
         }
 
@@ -225,6 +226,6 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     public void onInfoFilled() {
         InterpolationCalculator.getInstance().getSharedPreferences().edit().putBoolean
                 (PrefConstants.INFO_IS_READY, true).apply();
-        solveEquationLayout.setVisibility(View.VISIBLE);
+        //solveEquationLayout.setVisibility(View.VISIBLE);
     }
 }
