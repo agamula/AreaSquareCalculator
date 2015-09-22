@@ -52,6 +52,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
     private List<Integer> avgPointIds;
     private List<List<Float>> squareValues;
     private List<Float> avgValues;
+    private List<Boolean> indexesClicked;
     private List<List<String>> paths;
     private final SQLiteDatabase mDatabase;
     private final Fragment fragment;
@@ -109,9 +110,12 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         }
 
         avgValues = new ArrayList<>(Project.SIMPLE_MEASURE_AVG_POINTS_COUNT);
+        indexesClicked = new ArrayList<>(Project.SIMPLE_MEASURE_AVG_POINTS_COUNT);
+
         for (int i = 0; i < Project.SIMPLE_MEASURE_AVG_POINTS_COUNT; i++) {
             List<Float> squares = squareValues.get(i);
             avgValues.add(new AvgPoint(squares).avg());
+            indexesClicked.add(false);
         }
 
         paths = new ArrayList<>(Project.SIMPLE_MEASURE_AVG_POINTS_COUNT);
@@ -237,7 +241,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                     }
                 }
 
-                if (allItemInited) {
+                if (allItemInited || indexesClicked.get(index1)) {
                     ppmText.setText(FloatFormatter.format(avgValues.get(index1)));
                 } else {
                     ppmText.setText("");
@@ -265,12 +269,12 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                             }
                         }
                         avgValues.set(indexAvg, new AvgPoint(squareValues.get(indexAvg)).avg());
+                        indexesClicked.set(indexAvg, true);
                         notifyDataSetChanged();
                     }
                 });
 
-                avgCalcButton.setEnabled(squarePointIds.size() == Project
-                        .SIMPLE_MEASURE_AVG_POINTS_COUNT);
+                avgCalcButton.setEnabled(true);
 
                 break;
             case ITEM_ID_DATA:

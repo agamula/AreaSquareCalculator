@@ -132,7 +132,18 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 }
                 float avgValueY = Float.parseFloat(avgValue.getText().toString());
                 //solvedPpm.setText(FloatFormatter.format(avgValueY / lineKoef));
-                solvedPpm.setText(FloatFormatter.format(getXbyY(avgValueY)));
+                float value = -1;
+                try {
+                    value = getXbyY(avgValueY);
+                } catch (Exception e) {
+                    value = -1;
+                }
+
+                if(value == -1) {
+                    Toast.makeText(getActivity(), R.string.wrong_data, Toast.LENGTH_LONG).show();
+                } else {
+                    solvedPpm.setText(FloatFormatter.format(value));
+                }
             }
         });
 
