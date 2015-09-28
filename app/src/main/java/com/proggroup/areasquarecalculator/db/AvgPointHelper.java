@@ -29,17 +29,11 @@ public class AvgPointHelper {
         this.project = project;
     }
 
-    public void addAvgPoint() {
-        if(project.isSimpleMeasure()) {
-            List<Integer> avgPoints = getAvgPoints();
-            if(avgPoints.size() == Project.TABLE_MAX_COLS_COUNT) {
-                return;
-            }
-        }
+    public long addAvgPoint() {
         ContentValues cv = new ContentValues(2);
         cv.put(Project.ID, project.getId());
         cv.put(PPM_VALUE, 0);
-        writeDb.insert(TABLE_NAME, null, cv);
+        return writeDb.insert(TABLE_NAME, null, cv);
     }
 
     public void updatePpm(int avgPointId, float ppm) {
