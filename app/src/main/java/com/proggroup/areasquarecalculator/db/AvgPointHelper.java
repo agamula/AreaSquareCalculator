@@ -57,15 +57,15 @@ public class AvgPointHelper {
         }
     }
 
-    public List<Integer> getAvgPoints() {
+    public List<Long> getAvgPoints() {
         Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{BaseColumns._ID},
                 Project.ID + " = ?", new String[]{"" + project.getId()}, null, null, null);
 
         if (cursor.moveToFirst()) {
-            List<Integer> res = new ArrayList<>(cursor.getCount());
+            List<Long> res = new ArrayList<>(cursor.getCount());
 
             do {
-                res.add(cursor.getInt(0));
+                res.add(cursor.getLong(0));
 
             } while (cursor.moveToNext());
             cursor.close();
@@ -77,7 +77,7 @@ public class AvgPointHelper {
         }
     }
 
-    public void deleteAvgPoint(int avgPointId) {
+    public void deleteAvgPoint(long avgPointId) {
         if(project.isSimpleMeasure()) {
             return;
         }

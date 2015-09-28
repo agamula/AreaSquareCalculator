@@ -25,15 +25,15 @@ public class SquarePointHelper {
         this.writeDb = writeDb;
     }
 
-    public List<Integer> getSquarePointIds(int avgPointId) {
+    public List<Long> getSquarePointIds(long avgPointId) {
         Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{BaseColumns._ID},
                 AvgPointHelper.ID + " = ?", new String[]{"" + avgPointId}, null, null, null);
 
         if (cursor.moveToFirst()) {
-            List<Integer> res = new ArrayList<>(cursor.getCount());
+            List<Long> res = new ArrayList<>(cursor.getCount());
 
             do {
-                res.add(cursor.getInt(0));
+                res.add(cursor.getLong(0));
 
             } while (cursor.moveToNext());
             cursor.close();
@@ -45,37 +45,37 @@ public class SquarePointHelper {
         }
     }
 
-    public void addSquarePointId(int avgPointId) {
+    public void addSquarePointId(long avgPointId) {
         ContentValues cv = new ContentValues(1);
         cv.put(AvgPointHelper.ID, avgPointId);
         writeDb.insert(TABLE_NAME, null, cv);
     }
 
-    public void addSquarePointIdSimpleMeasure(int avgPointId) {
-        List<Integer> squarePointIds = getSquarePointIds(avgPointId);
+    public void addSquarePointIdSimpleMeasure(long avgPointId) {
+        List<Long> squarePointIds = getSquarePointIds(avgPointId);
         if (squarePointIds.size() == Project.TABLE_MAX_COLS_COUNT) {
             return;
         }
         addSquarePointId(avgPointId);
     }
 
-    private int getAvgPointId(int squarePointId) {
+    private long getAvgPointId(long squarePointId) {
         Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{AvgPointHelper.ID},
                 BaseColumns._ID + " = ?", new String[]{"" + squarePointId}, null, null, null);
 
         if (cursor.moveToFirst()) {
             cursor.close();
 
-            return cursor.getInt(0);
+            return cursor.getLong(0);
         } else {
             cursor.close();
             return -1;
         }
     }
 
-    public void deleteSquarePointId(int id, boolean isSimpleMeasure) {
+    public void deleteSquarePointId(long id, boolean isSimpleMeasure) {
         if (isSimpleMeasure) {
-            int avgPointId = getAvgPointId(id);
+            long avgPointId = getAvgPointId(id);
             if (avgPointId != -1) {
                 return;
             }

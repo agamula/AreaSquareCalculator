@@ -9,13 +9,13 @@ public class Project {
     public static final String ID = "project_id";
 
     private boolean isSimpleMeasure;
-    private int id;
+    private long id;
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -37,7 +37,7 @@ public class ProjectHelper {
     public Project addProject(boolean isSimpleMeasure) {
         ContentValues cv = new ContentValues(1);
         cv.put(Project.IS_SIMPLE_MEASURE, isSimpleMeasure ? 1 : 0);
-        int id = (int) writeDb.insert(Project.TABLE_NAME, null, cv);
+        long id = writeDb.insert(Project.TABLE_NAME, null, cv);
         Project project = new Project();
         project.setIsSimpleMeasure(isSimpleMeasure);
         project.setId(id);
@@ -46,7 +46,7 @@ public class ProjectHelper {
 
     public void deleteProject(Project project) {
         AvgPointHelper avgPointHelper = new AvgPointHelper(writeDb, project);
-        for (int id : avgPointHelper.getAvgPoints()) {
+        for (long id : avgPointHelper.getAvgPoints()) {
             avgPointHelper.deleteAvgPoint(id);
         }
         writeDb.delete(Project.TABLE_NAME, BaseColumns._ID + " = ?", new String[] {project.getId() +
@@ -63,7 +63,7 @@ public class ProjectHelper {
 
             do {
                 Project project = new Project();
-                project.setId(cursor.getInt(0));
+                project.setId(cursor.getLong(0));
                 project.setIsSimpleMeasure(cursor.getInt(1) == 1);
 
                 res.add(project);

@@ -27,7 +27,7 @@ public class PointHelper {
         this.writeDb = writeDb;
     }
 
-    public List<PointF> getPoints(int squarePointId) {
+    public List<PointF> getPoints(long squarePointId) {
         Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{POINT_X, POINT_Y},
                 SquarePointHelper.ID + " = ?", new String[]{"" + squarePointId}, null, null, null);
 
@@ -48,7 +48,7 @@ public class PointHelper {
         }
     }
 
-    public void addPoints(int squarePointId, List<PointF> points) {
+    public void addPoints(long squarePointId, List<PointF> points) {
         for (PointF point : points) {
             ContentValues cv = new ContentValues(3);
             cv.put(POINT_X, (int)point.x);
@@ -58,12 +58,12 @@ public class PointHelper {
         }
     }
 
-    public void updatePoints(int squarePointId, List<PointF> points) {
+    public void updatePoints(long squarePointId, List<PointF> points) {
         deletePoints(squarePointId);
         addPoints(squarePointId, points);
     }
 
-    public void deletePoints(int squarePointId) {
+    public void deletePoints(long squarePointId) {
         writeDb.delete(TABLE_NAME, SquarePointHelper.ID + " = ?", new String[] {"" + squarePointId});
     }
 }
