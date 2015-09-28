@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -167,7 +165,32 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
             calculatePpmLayout.setVisibility(View.VISIBLE);
         }
 
-        adapter = new CalculatePpmSimpleAdapter(this, this);
+        SQLiteHelper helper = InterpolationCalculator.getInstance().getSqLiteHelper();
+        SQLiteDatabase mDatabase = helper.getWritableDatabase();
+        Project project = new ProjectHelper(mDatabase).getProjects().get(0);
+
+        AvgPointHelper avgPointHelper = new AvgPointHelper(mDatabase, project);
+
+        boolean isFirstInit = avgPointHelper.getAvgPoints().isEmpty();
+
+        if (isFirstInit) {
+            for (int i = 0; i < Project.TABLE_MIN_ROWS_COUNT; i++) {
+                avgPointHelper.addAvgPoint();
+            }
+        }
+        List<Integer> avgPointIds = avgPointHelper.getAvgPoints();
+
+        SquarePointHelper squarePointHelper = new SquarePointHelper(mDatabase);
+
+        if (isFirstInit) {
+            for (int avgPoint : avgPointIds) {
+                for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
+                    squarePointHelper.addSquarePointIdSimpleMeasure(avgPoint);
+                }
+            }
+        }
+
+        adapter = new CalculatePpmSimpleAdapter(this, this, avgPointHelper, squarePointHelper, avgPointIds);
 
         mGridView.setAdapter(adapter);
     }
@@ -217,8 +240,8 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            int row = requestCode / Project.SIMPLE_MEASURE_AVG_POINTS_COUNT;
-            int col = requestCode % Project.SIMPLE_MEASURE_AVG_POINTS_COUNT;
+            int row = requestCode / Project.TABLE_MAX_COLS_COUNT;
+            int col = requestCode % Project.TABLE_MAX_COLS_COUNT;
             adapter.updateSquare(row, col, data.getStringExtra(FileDialog.RESULT_PATH));
             adapter.calculateAvg(row);
         }

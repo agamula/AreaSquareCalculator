@@ -1,6 +1,5 @@
 package com.proggroup.areasquarecalculator.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,50 +43,34 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
     public static final int ITEM_ID_CALC_AVG_RESULT = 3;
     public static final int ITEM_ID_KNOWN_PPM = 4;
 
-    private Project project;
-    private AvgPointHelper avgPointHelper;
     private SquarePointHelper squarePointHelper;
+    private AvgPointHelper avgPointHelper;
     private List<Integer> avgPointIds;
     private List<List<Float>> squareValues;
     private List<Float> avgValues;
-    private List<Boolean> indexesClicked;
     private List<List<String>> paths;
     private final SQLiteDatabase mDatabase;
     private final Fragment fragment;
     private int ppmIndex;
     private final OnInfoFilledListener onInfoFilledListener;
 
-    public CalculatePpmSimpleAdapter(Fragment fragment, OnInfoFilledListener onInfoFilledListener) {
+    public CalculatePpmSimpleAdapter(Fragment fragment, OnInfoFilledListener
+            onInfoFilledListener, AvgPointHelper avgPointHelper, SquarePointHelper
+                                             mSquarePointHelper, List<Integer> avgPointIds) {
         this.fragment = fragment;
         this.onInfoFilledListener = onInfoFilledListener;
         SQLiteHelper helper = InterpolationCalculator.getInstance().getSqLiteHelper();
         mDatabase = helper.getWritableDatabase();
-        project = new ProjectHelper(mDatabase).getProjects().get(0);
-        avgPointHelper = new AvgPointHelper(mDatabase, project);
 
-        boolean isFirstInit = avgPointHelper.getAvgPoints().isEmpty();
+        this.avgPointIds = avgPointIds;
+        this.avgPointHelper = avgPointHelper;
 
-        if (isFirstInit) {
-            for (int i = 0; i < Project.SIMPLE_MEASURE_AVG_POINTS_COUNT; i++) {
-                avgPointHelper.addAvgPoint();
-            }
-        }
-        avgPointIds = avgPointHelper.getAvgPoints();
+        squarePointHelper = mSquarePointHelper;
 
-        squarePointHelper = new SquarePointHelper(mDatabase);
-
-        if (isFirstInit) {
-            for (int avgPoint : avgPointIds) {
-                for (int i = 0; i < Project.SIMPLE_MEASURE_AVG_POINTS_COUNT; i++) {
-                    squarePointHelper.addSquarePointIdSimpleMeasure(avgPoint);
-                }
-            }
-        }
-
-        squareValues = new ArrayList<>(Project.SIMPLE_MEASURE_AVG_POINTS_COUNT);
-        for (int i = 0; i < Project.SIMPLE_MEASURE_AVG_POINTS_COUNT; i++) {
-            List<Float> squares = new ArrayList<>();
-            for (int j = 0; j < Project.SIMPLE_MEASURE_AVG_POINTS_COUNT; j++) {
+        squareValues = new ArrayList<>(Project.TABLE_MAX_COLS_COUNT);
+        for (int i = 0; i < avgPointIds.size(); i++) {
+            List<Float> squares = new ArrayList<>(Project.TABLE_MAX_COLS_COUNT);
+            for (int j = 0; j < Project.TABLE_MAX_COLS_COUNT; j++) {
                 squares.add(0f);
             }
             squareValues.add(squares);
@@ -96,7 +78,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
         PointHelper pointHelper = new PointHelper(mDatabase);
 
-        for (int i = 0; i < Project.SIMPLE_MEASURE_AVG_POINTS_COUNT; i++) {
+        for (int i = 0; i < avgPointIds.size(); i++) {
             List<Integer> squareIds = squarePointHelper.getSquarePointIds(avgPointIds.get(i));
             for (int j = 0; j < squareIds.size(); j++) {
                 int squareId = squareIds.get(j);
@@ -108,19 +90,17 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
             }
         }
 
-        avgValues = new ArrayList<>(Project.SIMPLE_MEASURE_AVG_POINTS_COUNT);
-        indexesClicked = new ArrayList<>(Project.SIMPLE_MEASURE_AVG_POINTS_COUNT);
+        avgValues = new ArrayList<>(avgPointIds.size());
 
-        for (int i = 0; i < Project.SIMPLE_MEASURE_AVG_POINTS_COUNT; i++) {
+        for (int i = 0; i < avgPointIds.size(); i++) {
             List<Float> squares = squareValues.get(i);
-            avgValues.add(new AvgPoint(squares).avg());
-            indexesClicked.add(false);
+            avgValues.add(new AvgPoint(remove0List(squares)).avg());
         }
 
-        paths = new ArrayList<>(Project.SIMPLE_MEASURE_AVG_POINTS_COUNT);
-        for (int i = 0; i < Project.SIMPLE_MEASURE_AVG_POINTS_COUNT; i++) {
-            List<String> pathes = new ArrayList<>(Project.SIMPLE_MEASURE_AVG_POINTS_COUNT);
-            for (int j = 0; j < Project.SIMPLE_MEASURE_AVG_POINTS_COUNT; j++) {
+        paths = new ArrayList<>(avgPointIds.size());
+        for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
+            List<String> pathes = new ArrayList<>(Project.TABLE_MAX_COLS_COUNT);
+            for (int j = 0; j < Project.TABLE_MAX_COLS_COUNT; j++) {
                 pathes.add(null);
             }
             paths.add(pathes);
@@ -133,8 +113,8 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 1) * (Project
-                .SIMPLE_MEASURE_AVG_POINTS_COUNT + 2);
+        return (avgValues.size() + 1) * (Project
+                .TABLE_MAX_COLS_COUNT + 2);
     }
 
     @Override
@@ -144,12 +124,12 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        if (position < Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) {
+        if (position < Project.TABLE_MAX_COLS_COUNT + 2) {
             return ITEM_ID_HEADER;
-        } else if (position % (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) == Project
-                .SIMPLE_MEASURE_AVG_POINTS_COUNT + 1) {
+        } else if (position % (Project.TABLE_MAX_COLS_COUNT + 2) == Project
+                .TABLE_MAX_COLS_COUNT + 1) {
             return ITEM_ID_CALC_AVG_RESULT;
-        } else if (position % (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) == 0) {
+        } else if (position % (Project.TABLE_MAX_COLS_COUNT + 2) == 0) {
             return ITEM_ID_KNOWN_PPM;
         } else {
             return ITEM_ID_DATA;
@@ -191,7 +171,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                         .getResources().getStringArray(R.array.headers)[position]);
                 break;
             case ITEM_ID_KNOWN_PPM:
-                final int index = position / (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) - 1;
+                final int index = position / (Project.TABLE_MAX_COLS_COUNT + 2) - 1;
 
                 EditText ppmText = (EditText) convertView.findViewById(R.id.edit);
                 if (ppmText.getTag() != null) {
@@ -219,41 +199,41 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 }
                 break;
             case ITEM_ID_CALC_AVG_RESULT:
-                int index1 = position / (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) - 1;
+                int index1 = position / (Project.TABLE_MAX_COLS_COUNT + 2) - 1;
 
                 ppmText = (EditText) convertView.findViewById(R.id.edit);
 
                 List<Float> squares = squareValues.get(index1);
-                boolean allItemInited = true;
+                boolean itemsInited = false;
 
                 for (Float square : squares) {
-                    if (square == 0f) {
-                        allItemInited = false;
+                    if (square != 0f) {
+                        itemsInited = true;
                         break;
                     }
                 }
 
-                if (allItemInited || indexesClicked.get(index1)) {
+                if (itemsInited) {
                     ppmText.setText(FloatFormatter.format(avgValues.get(index1)));
                 } else {
                     ppmText.setText("");
                 }
                 break;
             case ITEM_ID_DATA:
-                index1 = position / (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) - 1;
+                index1 = position / (Project.TABLE_MAX_COLS_COUNT + 2) - 1;
 
-                int pointNumber = position % (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) - 1;
+                int pointNumber = position % (Project.TABLE_MAX_COLS_COUNT + 2) - 1;
 
                 TextView squareVal = (TextView) convertView.findViewById(R.id.square_value);
                 TextView path = (TextView) convertView.findViewById(R.id.csv_path);
                 if (path.getTag() != null) {
                     Integer val = (Integer) path.getTag();
-                    int row = val / Project.SIMPLE_MEASURE_AVG_POINTS_COUNT;
-                    int col = val % Project.SIMPLE_MEASURE_AVG_POINTS_COUNT;
+                    int row = val / Project.TABLE_MAX_COLS_COUNT;
+                    int col = val % Project.TABLE_MAX_COLS_COUNT;
                     path.removeTextChangedListener(new PathChangeWatcher(row, col));
                 }
 
-                int pathTag = index1 * Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + pointNumber;
+                int pathTag = index1 * Project.TABLE_MAX_COLS_COUNT + pointNumber;
 
                 path.setTag(pathTag);
 
@@ -286,7 +266,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         Integer tag = (Integer) v.getTag();
 
-                        if(tag < 0) {
+                        if (tag < 0) {
                             Toast.makeText(fragment.getActivity(), R.string.input_ppm_first,
                                     Toast.LENGTH_LONG).show();
                             return;
@@ -305,7 +285,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
                 ppmValue = avgPointHelper.getPpmValue(avgPointIds.get(index1));
 
-                if(ppmValue == 0f) {
+                if (ppmValue == 0f) {
                     csvView.setTag(-pathTag - 1);
                 } else {
                     csvView.setTag(pathTag);
@@ -317,12 +297,12 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void calculateAvg(int indexAvg){
+    public void calculateAvg(int indexAvg) {
 
         for (int i = 0; i < paths.size(); i++) {
             if (paths.get(indexAvg).get(i) != null) {
                 File f = new File(paths.get(indexAvg).get(i));
-                if(f.exists()) {
+                if (f.exists()) {
                     float val = CalculateUtils.calculateSquare(f);
                     if (val > 0f) {
                         squareValues.get(indexAvg).set(i, val);
@@ -331,16 +311,18 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
             }
         }
         List<Float> values = squareValues.get(indexAvg);
+        avgValues.set(indexAvg, new AvgPoint(remove0List(values)).avg());
+        notifyDataSetChanged();
+    }
+
+    private List<Float> remove0List(List<Float> values) {
         List<Float> res = new ArrayList<>(values.size());
         for (float val : values) {
-            if(val != 0f) {
+            if (val != 0f) {
                 res.add(val);
             }
         }
-
-        avgValues.set(indexAvg, new AvgPoint(res).avg());
-        indexesClicked.set(indexAvg, true);
-        notifyDataSetChanged();
+        return res;
     }
 
     public void updateSquare(int row, int column, String path) {
@@ -348,19 +330,19 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         File f = new File(path);
         squares.set(column, CalculateUtils.calculateSquare(f));
 
-        boolean inited = true;
+        boolean inited = false;
 
         for (float square : squares) {
-            if(square == 0f) {
-                inited = false;
+            if (square != 0f) {
+                inited = true;
                 break;
             }
         }
 
-        if(inited) {
+        if (inited) {
             List<Float> res = new ArrayList<>(squares.size());
             for (float val : squares) {
-                if(val != 0f) {
+                if (val != 0f) {
                     res.add(val);
                 }
             }
@@ -376,7 +358,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         List<PointF> points = DocParser.parse(f);
 
         List<PointF> dbPoints = pointHelper.getPoints(squareId);
-        if(dbPoints.isEmpty()) {
+        if (dbPoints.isEmpty()) {
             pointHelper.addPoints(squareId, points);
         } else {
             pointHelper.updatePoints(squareId, points);
@@ -388,7 +370,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
     private void checkAvgValues() {
         for (float avgValue : avgValues) {
-            if(avgValue == 0f) {
+            if (avgValue == 0f) {
                 return;
             }
         }

@@ -1,7 +1,8 @@
 package com.proggroup.areasquarecalculator.data;
 
 public class Project {
-    public static final int SIMPLE_MEASURE_AVG_POINTS_COUNT = 4;
+    public static final int TABLE_MAX_COLS_COUNT = 4;
+    public static final int TABLE_MIN_ROWS_COUNT = 3;
 
     public static final String TABLE_NAME = "line_data";
     public static final String IS_SIMPLE_MEASURE = "_is_simple";

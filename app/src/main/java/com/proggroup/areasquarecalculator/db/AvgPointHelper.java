@@ -32,7 +32,7 @@ public class AvgPointHelper {
     public void addAvgPoint() {
         if(project.isSimpleMeasure()) {
             List<Integer> avgPoints = getAvgPoints();
-            if(avgPoints.size() == Project.SIMPLE_MEASURE_AVG_POINTS_COUNT) {
+            if(avgPoints.size() == Project.TABLE_MAX_COLS_COUNT) {
                 return;
             }
         }

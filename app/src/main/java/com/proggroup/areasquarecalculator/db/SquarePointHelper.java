@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
-import com.proggroup.areasquarecalculator.data.AvgPoint;
 import com.proggroup.areasquarecalculator.data.Project;
 
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class SquarePointHelper {
 
     public void addSquarePointIdSimpleMeasure(int avgPointId) {
         List<Integer> squarePointIds = getSquarePointIds(avgPointId);
-        if (squarePointIds.size() == Project.SIMPLE_MEASURE_AVG_POINTS_COUNT) {
+        if (squarePointIds.size() == Project.TABLE_MAX_COLS_COUNT) {
             return;
         }
         addSquarePointId(avgPointId);
