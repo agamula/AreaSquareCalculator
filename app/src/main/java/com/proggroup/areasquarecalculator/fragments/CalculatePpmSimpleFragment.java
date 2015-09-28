@@ -32,8 +32,11 @@ import com.proggroup.areasquarecalculator.utils.FloatFormatter;
 import com.proggroup.squarecalculations.CalculateUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpmSimpleAdapter.OnInfoFilledListener {
 
@@ -45,6 +48,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     private View solveLineEquation, calculatePpmSimple;
     private View progressLayout;
     private float lineKoef;
+    private Button btnAddRow;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -192,11 +196,12 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
             }
         }
 
+        btnAddRow = (Button) view.findViewById(R.id.simple_ppm_btn_addRow);
+
         adapter = new CalculatePpmSimpleAdapter(this, this, avgPointHelper, squarePointHelper, avgPointIds);
 
         mGridView.setAdapter(adapter);
 
-        Button btnAddRow = (Button) view.findViewById(R.id.simple_ppm_btn_addRow);
         btnAddRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,6 +213,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 CalculatePpmSimpleAdapter adapter = ((CalculatePpmSimpleAdapter) mGridView
                         .getAdapter());
                 adapter.addAvgPoint(id);
+                v.setVisibility(View.GONE);
             }
         });
     }
@@ -222,20 +228,24 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         AvgPointHelper helper1 = new AvgPointHelper(writeDb, project);
         List<Long> avgids = helper1.getAvgPoints();
 
-        SquarePointHelper pointHelper = new SquarePointHelper(writeDb);
-        PointHelper pHelper = new PointHelper(writeDb);
+        CalculatePpmSimpleAdapter adapter = ((CalculatePpmSimpleAdapter) mGridView
+                .getAdapter());
 
-        for (long avgId : avgids) {
-            xPoints.add(helper1.getPpmValue(avgId));
-            List<Long> sqIds = pointHelper.getSquarePointIds(avgId);
+        List<Float > avgValues = adapter.getAvgValues();
 
-            List<Float> squares = new ArrayList<>(sqIds.size());
+        Map<Float, Float> linkedMap = new TreeMap<>();
 
-            for (int i = 0; i < sqIds.size(); i++) {
-                squares.add(CalculateUtils.calculateSquare(pHelper.getPoints(sqIds.get(i)
-                )));
-            }
-            yPoints.add(new AvgPoint(squares).avg());
+        for (int i = 0; i < avgids.size(); i++) {
+            long avgId = avgids.get(i);
+            linkedMap.put(helper1.getPpmValue(avgId), avgValues.get(i));
+        }
+
+        xPoints.add(0f);
+        yPoints.add(0f);
+
+        for (Map.Entry<Float, Float> entry : linkedMap.entrySet()) {
+            xPoints.add(entry.getKey());
+            yPoints.add(entry.getValue());
         }
 
         for (int i = 0; i < yPoints.size() - 1; i++) {
@@ -268,6 +278,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     public void onInfoFilled() {
         InterpolationCalculator.getInstance().getSharedPreferences().edit().putBoolean
                 (PrefConstants.INFO_IS_READY, true).apply();
-        //solveEquationLayout.setVisibility(View.VISIBLE);
+        calculatePpmLayout.setVisibility(View.VISIBLE);
+        btnAddRow.setVisibility(View.VISIBLE);
     }
 }

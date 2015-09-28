@@ -111,6 +111,10 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         checkAvgValues();
     }
 
+    public List<Float> getAvgValues() {
+        return avgValues;
+    }
+
     public void addAvgPoint(long avgPointId) {
         avgPointIds.add(avgPointId);
         List<Float> points = new ArrayList<>(Project.TABLE_MAX_COLS_COUNT);

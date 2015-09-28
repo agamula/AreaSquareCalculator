@@ -18,26 +18,27 @@
                 android:id="@+id/grid"
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
-                android:stretchMode="columnWidth"
-                android:numColumns="6"
-                android:horizontalSpacing="1dp"
-                android:verticalSpacing="1dp"
                 android:layout_margin="@dimen/text_margin_default"
-                android:background="@color/grid_color"/>
+                android:background="@color/grid_color"
+                android:horizontalSpacing="1dp"
+                android:numColumns="6"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="1dp"/>
 
             <Button
                 android:id="@+id/simple_ppm_btn_addRow"
-                android:text="Add row"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="Add row"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/solve_line_equation_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:gravity="center_vertical"
                 android:layout_marginTop="@dimen/text_margin_default"
+                android:gravity="center_vertical"
                 android:visibility="gone">
 
                 <Button
@@ -82,18 +83,18 @@
 
                     <TextView
                         style="@style/TextViewDefaultStyle"
-                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:text="@string/enter_avg_square"/>
 
                     <EditText
                         android:id="@+id/avg_value"
                         style="@style/EditTextDefaultStyle"
                         android:layout_width="match_parent"
-                        android:singleLine="true"
-                        android:inputType="number"
                         android:digits="0123456789."
-                        android:imeOptions="actionDone"/>
+                        android:imeOptions="actionDone"
+                        android:inputType="number"
+                        android:singleLine="true"/>
                 </LinearLayout>
 
                 <LinearLayout
