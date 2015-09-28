@@ -45,7 +45,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
     private SquarePointHelper squarePointHelper;
     private AvgPointHelper avgPointHelper;
-    private List<Integer> avgPointIds;
+    private List<Long> avgPointIds;
     private List<List<Float>> squareValues;
     private List<Float> avgValues;
     private List<List<String>> paths;
@@ -56,7 +56,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
     public CalculatePpmSimpleAdapter(Fragment fragment, OnInfoFilledListener
             onInfoFilledListener, AvgPointHelper avgPointHelper, SquarePointHelper
-                                             mSquarePointHelper, List<Integer> avgPointIds) {
+                                             mSquarePointHelper, List<Long> avgPointIds) {
         this.fragment = fragment;
         this.onInfoFilledListener = onInfoFilledListener;
         SQLiteHelper helper = InterpolationCalculator.getInstance().getSqLiteHelper();
@@ -79,9 +79,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         PointHelper pointHelper = new PointHelper(mDatabase);
 
         for (int i = 0; i < avgPointIds.size(); i++) {
-            List<Integer> squareIds = squarePointHelper.getSquarePointIds(avgPointIds.get(i));
+            List<Long> squareIds = squarePointHelper.getSquarePointIds(avgPointIds.get(i));
             for (int j = 0; j < squareIds.size(); j++) {
-                int squareId = squareIds.get(j);
+                long squareId = squareIds.get(j);
 
                 List<PointF> points = pointHelper.getPoints(squareId);
                 if (!points.isEmpty()) {
@@ -351,7 +351,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
         checkAvgValues();
 
-        int squareId = squarePointHelper.getSquarePointIds(avgPointIds.get(row)).get(column);
+        long squareId = squarePointHelper.getSquarePointIds(avgPointIds.get(row)).get(column);
 
         PointHelper pointHelper = new PointHelper(mDatabase);
 
