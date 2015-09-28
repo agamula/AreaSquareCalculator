@@ -12,8 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.proggroup.approximatecalcs.CalculateUtils;
 import com.proggroup.areasquarecalculator.R;
+import com.proggroup.areasquarecalculator.utils.FloatFormatter;
+import com.proggroup.squarecalculations.CalculateUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -112,7 +113,7 @@ public class MainActivityOld extends AppCompatActivity {
             float res = CalculateUtils.calculateSquare(mInputFile);
             //res = CalculateUtils.calculateSquareDeterminant(mInputFile);
             //res = CalculateUtils.calculateSquareDeterminantParallel(mInputFile);
-            mResultEdit.setText(String.format("%.4f", res));
+            mResultEdit.setText(FloatFormatter.format(res));
         }
     }
 }

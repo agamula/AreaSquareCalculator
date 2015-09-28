@@ -3,9 +3,8 @@ package com.proggroup.areasquarecalculator.db;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.PointF;
 import android.provider.BaseColumns;
-
-import com.proggroup.approximatecalcs.data.Point;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +16,8 @@ public class PointHelper {
 
     public static final String CREATE_REQUEST = "create table " + TABLE_NAME +
             " ( " + BaseColumns._ID + " integer primary key autoincrement, "
-            + POINT_X + " integer not null, "
-            + POINT_Y + " integer not null, "
+            + POINT_X + " real not null, "
+            + POINT_Y + " real not null, "
             + SquarePointHelper.ID + " integer not null);";
     public static final String DROP_REQUEST = "drop table if exists" + TABLE_NAME;
 
@@ -28,15 +27,15 @@ public class PointHelper {
         this.writeDb = writeDb;
     }
 
-    public List<Point> getPoints(int squarePointId) {
+    public List<PointF> getPoints(int squarePointId) {
         Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{POINT_X, POINT_Y},
                 SquarePointHelper.ID + " = ?", new String[]{"" + squarePointId}, null, null, null);
 
         if (cursor.moveToFirst()) {
-            List<Point> res = new ArrayList<>(cursor.getCount());
+            List<PointF> res = new ArrayList<>(cursor.getCount());
 
             do {
-                Point point = new Point(cursor.getInt(0), cursor.getInt(1));
+                PointF point = new PointF(cursor.getFloat(0), cursor.getFloat(1));
                 res.add(point);
 
             } while (cursor.moveToNext());
@@ -49,8 +48,8 @@ public class PointHelper {
         }
     }
 
-    public void addPoints(int squarePointId, List<Point> points) {
-        for (Point point : points) {
+    public void addPoints(int squarePointId, List<PointF> points) {
+        for (PointF point : points) {
             ContentValues cv = new ContentValues(3);
             cv.put(POINT_X, (int)point.x);
             cv.put(POINT_Y, point.y);
@@ -59,7 +58,7 @@ public class PointHelper {
         }
     }
 
-    public void updatePoints(int squarePointId, List<Point> points) {
+    public void updatePoints(int squarePointId, List<PointF> points) {
         deletePoints(squarePointId);
         addPoints(squarePointId, points);
     }

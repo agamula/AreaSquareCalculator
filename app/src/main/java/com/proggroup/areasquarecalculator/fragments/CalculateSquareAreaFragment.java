@@ -14,9 +14,9 @@ import android.widget.Toast;
 
 import com.lamerman.FileDialog;
 import com.lamerman.SelectionMode;
-import com.proggroup.approximatecalcs.CalculateUtils;
 import com.proggroup.areasquarecalculator.R;
 import com.proggroup.areasquarecalculator.utils.FloatFormatter;
+import com.proggroup.squarecalculations.CalculateUtils;
 
 import java.io.File;
 

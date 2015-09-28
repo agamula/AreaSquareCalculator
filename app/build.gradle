@@ -22,5 +22,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
-    compile files('libs/area_square_interpolation.jar')
+    compile group: 'org.ejml', name: 'all', version: '0.28'
+
 }

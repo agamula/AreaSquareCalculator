@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lamerman.FileDialog;
-import com.proggroup.approximatecalcs.CalculateUtils;
 import com.proggroup.areasquarecalculator.InterpolationCalculator;
 import com.proggroup.areasquarecalculator.R;
 import com.proggroup.areasquarecalculator.adapters.CalculatePpmSimpleAdapter;
@@ -29,6 +28,7 @@ import com.proggroup.areasquarecalculator.db.ProjectHelper;
 import com.proggroup.areasquarecalculator.db.SQLiteHelper;
 import com.proggroup.areasquarecalculator.db.SquarePointHelper;
 import com.proggroup.areasquarecalculator.utils.FloatFormatter;
+import com.proggroup.squarecalculations.CalculateUtils;
 
 import java.util.ArrayList;
 import java.util.List;

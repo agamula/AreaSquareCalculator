@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.PointF;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -20,9 +21,6 @@ import android.widget.Toast;
 
 import com.lamerman.FileDialog;
 import com.lamerman.SelectionMode;
-import com.proggroup.approximatecalcs.CalculateUtils;
-import com.proggroup.approximatecalcs.DocParser;
-import com.proggroup.approximatecalcs.data.Point;
 import com.proggroup.areasquarecalculator.InterpolationCalculator;
 import com.proggroup.areasquarecalculator.R;
 import com.proggroup.areasquarecalculator.data.AvgPoint;
@@ -33,6 +31,8 @@ import com.proggroup.areasquarecalculator.db.ProjectHelper;
 import com.proggroup.areasquarecalculator.db.SQLiteHelper;
 import com.proggroup.areasquarecalculator.db.SquarePointHelper;
 import com.proggroup.areasquarecalculator.utils.FloatFormatter;
+import com.proggroup.squarecalculations.CalculateUtils;
+import com.proggroup.squarecalculations.DocParser;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
             for (int j = 0; j < squareIds.size(); j++) {
                 int squareId = squareIds.get(j);
 
-                List<Point> points = pointHelper.getPoints(squareId);
+                List<PointF> points = pointHelper.getPoints(squareId);
                 if (!points.isEmpty()) {
                     squareValues.get(i).set(j, CalculateUtils.calculateSquare(points));
                 }
@@ -393,9 +393,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
         PointHelper pointHelper = new PointHelper(mDatabase);
 
-        List<Point> points = DocParser.parse(f);
+        List<PointF> points = DocParser.parse(f);
 
-        List<Point> dbPoints = pointHelper.getPoints(squareId);
+        List<PointF> dbPoints = pointHelper.getPoints(squareId);
         if(dbPoints.isEmpty()) {
             pointHelper.addPoints(squareId, points);
         } else {

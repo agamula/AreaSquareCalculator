@@ -3,24 +3,24 @@ package com.proggroup.areasquarecalculator.data;
 import java.util.List;
 
 public class AvgPoint {
-    private final List<Float> squares;
+    private final List<Float> values;
     private Float cachedAvg;
 
-    public AvgPoint(List<Float> squares) {
-        this.squares = squares;
+    public AvgPoint(List<Float> values) {
+        this.values = values;
         cachedAvg = null;
     }
 
     public float avg() {
         if (cachedAvg == null) {
             float res = 0f;
-            if (squares == null || squares.isEmpty()) {
+            if (values == null || values.isEmpty()) {
                 return res;
             }
-            for (float square : squares) {
+            for (float square : values) {
                 res += square;
             }
-            res /= squares.size();
+            res /= values.size();
             cachedAvg = res;
         }
         return cachedAvg;

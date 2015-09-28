@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
-import com.proggroup.approximatecalcs.data.Point;
 import com.proggroup.areasquarecalculator.data.Project;
 
 import java.util.ArrayList;
