@@ -6,7 +6,6 @@
         <item>@string/second_test</item>
         <item>@string/third_test</item>
         <item>@string/fourth_test</item>
-        <item>@string/avg_data_recalculate</item>
         <item>@string/avg_data_result</item>
     </string-array>
 </resources>

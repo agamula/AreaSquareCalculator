@@ -42,7 +42,6 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
     public static final int ITEM_ID_DATA = 0;
     public static final int ITEM_ID_HEADER = 1;
-    public static final int ITEM_ID_CALCULATE_AVG = 2;
     public static final int ITEM_ID_CALC_AVG_RESULT = 3;
     public static final int ITEM_ID_KNOWN_PPM = 4;
 
@@ -135,7 +134,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         return (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 1) * (Project
-                .SIMPLE_MEASURE_AVG_POINTS_COUNT + 3);
+                .SIMPLE_MEASURE_AVG_POINTS_COUNT + 2);
     }
 
     @Override
@@ -145,15 +144,12 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        if (position < Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 3) {
+        if (position < Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) {
             return ITEM_ID_HEADER;
-        } else if (position % (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 3) == Project
+        } else if (position % (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) == Project
                 .SIMPLE_MEASURE_AVG_POINTS_COUNT + 1) {
-            return ITEM_ID_CALCULATE_AVG;
-        } else if (position % (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 3) == Project
-                .SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) {
             return ITEM_ID_CALC_AVG_RESULT;
-        } else if (position % (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 3) == 0) {
+        } else if (position % (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) == 0) {
             return ITEM_ID_KNOWN_PPM;
         } else {
             return ITEM_ID_DATA;
@@ -179,10 +175,6 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                     convertView = inflater.inflate(R.layout.layout_table_edit_text, parent, false);
                     convertView.findViewById(R.id.edit).setEnabled(false);
                     break;
-                case ITEM_ID_CALCULATE_AVG:
-                    convertView = inflater.inflate(R.layout.layout_table_avg_calculate, parent,
-                            false);
-                    break;
                 case ITEM_ID_DATA:
                     convertView = inflater.inflate(R.layout.layout_table_item, parent, false);
                     break;
@@ -199,7 +191,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                         .getResources().getStringArray(R.array.headers)[position]);
                 break;
             case ITEM_ID_KNOWN_PPM:
-                final int index = position / (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 3) - 1;
+                final int index = position / (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) - 1;
 
                 EditText ppmText = (EditText) convertView.findViewById(R.id.edit);
                 if (ppmText.getTag() != null) {
@@ -227,7 +219,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 }
                 break;
             case ITEM_ID_CALC_AVG_RESULT:
-                int index1 = position / (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 3) - 1;
+                int index1 = position / (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) - 1;
 
                 ppmText = (EditText) convertView.findViewById(R.id.edit);
 
@@ -247,27 +239,10 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                     ppmText.setText("");
                 }
                 break;
-            case ITEM_ID_CALCULATE_AVG:
-                final int indexAvg = position / (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 3) - 1;
-                int avgPointId = avgPointIds.get(indexAvg);
-
-                List<Integer> squarePointIds = squarePointHelper.getSquarePointIds(avgPointId);
-
-                Button avgCalcButton = (Button) convertView.findViewById(R.id.calculate_avg);
-                avgCalcButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        calculateAvg(indexAvg);
-                    }
-                });
-
-                avgCalcButton.setEnabled(true);
-
-                break;
             case ITEM_ID_DATA:
-                index1 = position / (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 3) - 1;
+                index1 = position / (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) - 1;
 
-                int pointNumber = position % (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 3) - 1;
+                int pointNumber = position % (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 2) - 1;
 
                 TextView squareVal = (TextView) convertView.findViewById(R.id.square_value);
                 TextView path = (TextView) convertView.findViewById(R.id.csv_path);
