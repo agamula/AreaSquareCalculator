@@ -111,6 +111,10 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         checkAvgValues();
     }
 
+    public List<List<Float>> getSquareValues() {
+        return squareValues;
+    }
+
     public List<Float> getAvgValues() {
         return avgValues;
     }

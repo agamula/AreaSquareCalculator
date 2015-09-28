@@ -25,12 +25,25 @@
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="1dp"/>
 
-            <Button
-                android:id="@+id/simple_ppm_btn_addRow"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Add row"
-                android:visibility="gone"/>
+                android:id="@+id/buttons_layout"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/simple_ppm_btn_addRow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add row" />
+
+                <Button
+                    android:id="@+id/generate_csv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Generate table (table.csv)"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/solve_line_equation_layout"

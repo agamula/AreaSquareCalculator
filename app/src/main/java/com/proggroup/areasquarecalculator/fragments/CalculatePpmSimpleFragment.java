@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +30,11 @@ import com.proggroup.areasquarecalculator.db.ProjectHelper;
 import com.proggroup.areasquarecalculator.db.SQLiteHelper;
 import com.proggroup.areasquarecalculator.db.SquarePointHelper;
 import com.proggroup.areasquarecalculator.utils.FloatFormatter;
+import com.proggroup.areasquarecalculator.utils.ReportCreator;
 import com.proggroup.squarecalculations.CalculateUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -48,7 +52,8 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     private View solveLineEquation, calculatePpmSimple;
     private View progressLayout;
     private float lineKoef;
-    private Button btnAddRow;
+    private Button btnAddRow, btnGenerateTable;
+    private View buttonsLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -196,6 +201,8 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
             }
         }
 
+        buttonsLayout = view.findViewById(R.id.buttons_layout);
+
         btnAddRow = (Button) view.findViewById(R.id.simple_ppm_btn_addRow);
 
         adapter = new CalculatePpmSimpleAdapter(this, this, avgPointHelper, squarePointHelper, avgPointIds);
@@ -213,7 +220,27 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 CalculatePpmSimpleAdapter adapter = ((CalculatePpmSimpleAdapter) mGridView
                         .getAdapter());
                 adapter.addAvgPoint(id);
-                v.setVisibility(View.GONE);
+                buttonsLayout.setVisibility(View.GONE);
+            }
+        });
+
+        btnGenerateTable = (Button) view.findViewById(R.id.generate_csv);
+        btnGenerateTable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String fileName = "table";
+                File f = new File(Environment.getExternalStorageDirectory(), fileName + ".csv");
+                if(!f.exists()) {
+                    try {
+                        f.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(ReportCreator.createReport((CalculatePpmSimpleAdapter) mGridView
+                        .getAdapter(), 6, "table")) {
+                    Toast.makeText(getActivity(), "Write success", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -279,6 +306,6 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         InterpolationCalculator.getInstance().getSharedPreferences().edit().putBoolean
                 (PrefConstants.INFO_IS_READY, true).apply();
         calculatePpmLayout.setVisibility(View.VISIBLE);
-        btnAddRow.setVisibility(View.VISIBLE);
+        buttonsLayout.setVisibility(View.VISIBLE);
     }
 }
