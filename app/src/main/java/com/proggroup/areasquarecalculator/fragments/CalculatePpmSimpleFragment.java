@@ -140,7 +140,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                     value = -1;
                 }
 
-                if(value == -1) {
+                if (value == -1) {
                     Toast.makeText(getActivity(), R.string.wrong_data, Toast.LENGTH_LONG).show();
                 } else {
                     solvedPpm.setText(FloatFormatter.format(value));
@@ -163,7 +163,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         if (prefs.contains(PrefConstants.LINE_KOEF)) {
             lineKoef = prefs.getFloat(PrefConstants.LINE_KOEF, 0f);
             //solvedFormula.setText(String.format(Locale.US, getString(R.string.equation_value), FloatFormatter.format
-             //       (lineKoef)));
+            //       (lineKoef)));
             calculatePpmLayout.setVisibility(View.VISIBLE);
         }
 
@@ -196,7 +196,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
 
         mGridView.setAdapter(adapter);
 
-        Button btnAddRow = (Button)view.findViewById(R.id.simple_ppm_btn_addRow);
+        Button btnAddRow = (Button) view.findViewById(R.id.simple_ppm_btn_addRow);
         btnAddRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,7 +204,10 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
                     squarePointHelper.addSquarePointIdSimpleMeasure(id);
                 }
-                ((BaseAdapter)mGridView.getAdapter()).notifyDataSetChanged();
+
+                CalculatePpmSimpleAdapter adapter = ((CalculatePpmSimpleAdapter) mGridView
+                        .getAdapter());
+                adapter.addAvgPoint(id);
             }
         });
     }

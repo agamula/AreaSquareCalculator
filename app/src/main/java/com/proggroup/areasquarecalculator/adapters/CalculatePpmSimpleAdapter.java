@@ -98,7 +98,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         }
 
         paths = new ArrayList<>(avgPointIds.size());
-        for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
+        for (int i = 0; i < avgPointIds.size(); i++) {
             List<String> pathes = new ArrayList<>(Project.TABLE_MAX_COLS_COUNT);
             for (int j = 0; j < Project.TABLE_MAX_COLS_COUNT; j++) {
                 pathes.add(null);
@@ -109,6 +109,22 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         ppmIndex = -1;
 
         checkAvgValues();
+    }
+
+    public void addAvgPoint(long avgPointId) {
+        avgPointIds.add(avgPointId);
+        List<Float> points = new ArrayList<>(Project.TABLE_MAX_COLS_COUNT);
+        for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
+            points.add(0f);
+        }
+        squareValues.add(points);
+        avgValues.add(new AvgPoint(remove0List(points)).avg());
+        List<String> pathes = new ArrayList<>(Project.TABLE_MAX_COLS_COUNT);
+        for (int j = 0; j < Project.TABLE_MAX_COLS_COUNT; j++) {
+            pathes.add(null);
+        }
+        paths.add(pathes);
+        notifyDataSetChanged();
     }
 
     @Override
