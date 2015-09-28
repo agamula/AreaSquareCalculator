@@ -352,7 +352,6 @@ public class CalculateUtils {
 
         if (startIndex != -1) {
             int endIndex = findEndIndex(points, yCached);
-            endIndex = 2;
 
             points = new ArrayList<>(points.subList(startIndex, endIndex + 1));
         } else {
