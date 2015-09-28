@@ -42,7 +42,7 @@ public class AvgPointHelper {
         writeDb.update(TABLE_NAME, cv, BaseColumns._ID + " = ?", new String[] {avgPointId + ""});
     }
 
-    public float getPpmValue(int pointId) {
+    public float getPpmValue(long pointId) {
         Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{PPM_VALUE},
                 BaseColumns._ID + " = ?", new String[]{"" + pointId}, null, null, null);
 
@@ -82,8 +82,8 @@ public class AvgPointHelper {
             return;
         }
         SquarePointHelper squarePointHelper = new SquarePointHelper(writeDb);
-        List<Integer> squarePointIds = squarePointHelper.getSquarePointIds(avgPointId);
-        for (int squarePointId : squarePointIds) {
+        List<Long> squarePointIds = squarePointHelper.getSquarePointIds(avgPointId);
+        for (Long squarePointId : squarePointIds) {
             squarePointHelper.deleteSquarePointId(squarePointId, project.isSimpleMeasure());
         }
         writeDb.delete(TABLE_NAME, BaseColumns._ID + " = ?", new String[] {"" + avgPointId});
