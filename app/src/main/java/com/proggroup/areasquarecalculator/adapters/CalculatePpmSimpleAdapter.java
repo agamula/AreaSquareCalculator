@@ -161,7 +161,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         int itemId = (int) getItemId(position);
 
         if (convertView == null || convertView.getTag() != Integer.valueOf(itemId)) {
@@ -257,28 +257,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 avgCalcButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        for (int i = 0; i < paths.size(); i++) {
-                            if (paths.get(indexAvg).get(i) != null) {
-                                File f = new File(paths.get(indexAvg).get(i));
-                                if(f.exists()) {
-                                    float val = CalculateUtils.calculateSquare(f);
-                                    if (val > 0f) {
-                                        squareValues.get(indexAvg).set(i, val);
-                                    }
-                                }
-                            }
-                        }
-                        List<Float> values = squareValues.get(indexAvg);
-                        List<Float> res = new ArrayList<>(values.size());
-                        for (float val : values) {
-                            if(val != 0f) {
-                                res.add(val);
-                            }
-                        }
-
-                        avgValues.set(indexAvg, new AvgPoint(res).avg());
-                        indexesClicked.set(indexAvg, true);
-                        notifyDataSetChanged();
+                        calculateAvg(indexAvg);
                     }
                 });
 
@@ -291,7 +270,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 int pointNumber = position % (Project.SIMPLE_MEASURE_AVG_POINTS_COUNT + 3) - 1;
 
                 TextView squareVal = (TextView) convertView.findViewById(R.id.square_value);
-                EditText path = (EditText) convertView.findViewById(R.id.csv_path);
+                TextView path = (TextView) convertView.findViewById(R.id.csv_path);
                 if (path.getTag() != null) {
                     Integer val = (Integer) path.getTag();
                     int row = val / Project.SIMPLE_MEASURE_AVG_POINTS_COUNT;
@@ -361,6 +340,32 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         }
 
         return convertView;
+    }
+
+    public void calculateAvg(int indexAvg){
+
+        for (int i = 0; i < paths.size(); i++) {
+            if (paths.get(indexAvg).get(i) != null) {
+                File f = new File(paths.get(indexAvg).get(i));
+                if(f.exists()) {
+                    float val = CalculateUtils.calculateSquare(f);
+                    if (val > 0f) {
+                        squareValues.get(indexAvg).set(i, val);
+                    }
+                }
+            }
+        }
+        List<Float> values = squareValues.get(indexAvg);
+        List<Float> res = new ArrayList<>(values.size());
+        for (float val : values) {
+            if(val != 0f) {
+                res.add(val);
+            }
+        }
+
+        avgValues.set(indexAvg, new AvgPoint(res).avg());
+        indexesClicked.set(indexAvg, true);
+        notifyDataSetChanged();
     }
 
     public void updateSquare(int row, int column, String path) {

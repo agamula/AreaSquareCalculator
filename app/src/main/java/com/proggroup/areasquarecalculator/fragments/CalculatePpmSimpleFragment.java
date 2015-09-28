@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -219,6 +220,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
             int row = requestCode / Project.SIMPLE_MEASURE_AVG_POINTS_COUNT;
             int col = requestCode % Project.SIMPLE_MEASURE_AVG_POINTS_COUNT;
             adapter.updateSquare(row, col, data.getStringExtra(FileDialog.RESULT_PATH));
+            adapter.calculateAvg(row);
         }
     }
 
