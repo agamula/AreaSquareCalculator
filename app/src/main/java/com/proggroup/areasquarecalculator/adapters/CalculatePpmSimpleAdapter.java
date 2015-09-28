@@ -401,7 +401,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
         @Override
         public void afterTextChanged(Editable s) {
-            int avgPointId = avgPointIds.get(index);
+            long avgPointId = avgPointIds.get(index);
             if (!s.toString().isEmpty()) {
                 avgPointHelper.updatePpm(avgPointId, Float.parseFloat(s.toString()));
             } else {

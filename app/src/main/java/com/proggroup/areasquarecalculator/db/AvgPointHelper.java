@@ -36,7 +36,7 @@ public class AvgPointHelper {
         return writeDb.insert(TABLE_NAME, null, cv);
     }
 
-    public void updatePpm(int avgPointId, float ppm) {
+    public void updatePpm(long avgPointId, float ppm) {
         ContentValues cv = new ContentValues(1);
         cv.put(PPM_VALUE, ppm);
         writeDb.update(TABLE_NAME, cv, BaseColumns._ID + " = ?", new String[] {avgPointId + ""});
