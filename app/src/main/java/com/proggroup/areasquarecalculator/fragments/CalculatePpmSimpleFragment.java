@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -68,16 +70,16 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 Project project = new ProjectHelper(writeDb).getProjects().get(0);
 
                 AvgPointHelper helper1 = new AvgPointHelper(writeDb, project);
-                List<Integer> avgids = helper1.getAvgPoints();
+                List<Long> avgids = helper1.getAvgPoints();
 
                 SquarePointHelper pointHelper = new SquarePointHelper(writeDb);
                 PointHelper pHelper = new PointHelper(writeDb);
 
                 float maxKoef = -1f, minKoef = -1f;
 
-                for (int avgId : avgids) {
+                for (long avgId : avgids) {
                     float ppm = helper1.getPpmValue(avgId);
-                    List<Integer> sqIds = pointHelper.getSquarePointIds(avgId);
+                    List<Long> sqIds = pointHelper.getSquarePointIds(avgId);
 
                     List<Float> squares = new ArrayList<>(sqIds.size());
 
@@ -169,7 +171,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         SQLiteDatabase mDatabase = helper.getWritableDatabase();
         Project project = new ProjectHelper(mDatabase).getProjects().get(0);
 
-        AvgPointHelper avgPointHelper = new AvgPointHelper(mDatabase, project);
+        final AvgPointHelper avgPointHelper = new AvgPointHelper(mDatabase, project);
 
         boolean isFirstInit = avgPointHelper.getAvgPoints().isEmpty();
 
@@ -178,12 +180,12 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 avgPointHelper.addAvgPoint();
             }
         }
-        List<Integer> avgPointIds = avgPointHelper.getAvgPoints();
+        List<Long> avgPointIds = avgPointHelper.getAvgPoints();
 
-        SquarePointHelper squarePointHelper = new SquarePointHelper(mDatabase);
+        final SquarePointHelper squarePointHelper = new SquarePointHelper(mDatabase);
 
         if (isFirstInit) {
-            for (int avgPoint : avgPointIds) {
+            for (long avgPoint : avgPointIds) {
                 for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
                     squarePointHelper.addSquarePointIdSimpleMeasure(avgPoint);
                 }
@@ -193,6 +195,18 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         adapter = new CalculatePpmSimpleAdapter(this, this, avgPointHelper, squarePointHelper, avgPointIds);
 
         mGridView.setAdapter(adapter);
+
+        Button btnAddRow = (Button)view.findViewById(R.id.simple_ppm_btn_addRow);
+        btnAddRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long id = avgPointHelper.addAvgPoint();
+                for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
+                    squarePointHelper.addSquarePointIdSimpleMeasure(id);
+                }
+                ((BaseAdapter)mGridView.getAdapter()).notifyDataSetChanged();
+            }
+        });
     }
 
     private float getXbyY(float y) {
@@ -203,14 +217,14 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         SQLiteDatabase writeDb = helper.getWritableDatabase();
         Project project = new ProjectHelper(writeDb).getProjects().get(0);
         AvgPointHelper helper1 = new AvgPointHelper(writeDb, project);
-        List<Integer> avgids = helper1.getAvgPoints();
+        List<Long> avgids = helper1.getAvgPoints();
 
         SquarePointHelper pointHelper = new SquarePointHelper(writeDb);
         PointHelper pHelper = new PointHelper(writeDb);
 
-        for (int avgId : avgids) {
+        for (long avgId : avgids) {
             xPoints.add(helper1.getPpmValue(avgId));
-            List<Integer> sqIds = pointHelper.getSquarePointIds(avgId);
+            List<Long> sqIds = pointHelper.getSquarePointIds(avgId);
 
             List<Float> squares = new ArrayList<>(sqIds.size());
 

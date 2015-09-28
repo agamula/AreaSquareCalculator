@@ -17,13 +17,19 @@
             <GridView
                 android:id="@+id/grid"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="240dp"
                 android:stretchMode="columnWidth"
                 android:numColumns="6"
                 android:horizontalSpacing="1dp"
                 android:verticalSpacing="1dp"
                 android:layout_margin="@dimen/text_margin_default"
                 android:background="@color/grid_color"/>
+
+            <Button
+                android:id="@+id/simple_ppm_btn_addRow"
+                android:text="Add row"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <LinearLayout
                 android:id="@+id/solve_line_equation_layout"
