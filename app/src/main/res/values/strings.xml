@@ -10,7 +10,6 @@
     <color name="gray">#ffff0000</color>
     <string name="err">Error</string>
 
-
     <string name="app_name">InterpolationCalculator</string>
     <string name="drawer_cont_desc_open">Open drawer</string>
     <string name="drawer_cont_desc_close">Close drawer</string>
