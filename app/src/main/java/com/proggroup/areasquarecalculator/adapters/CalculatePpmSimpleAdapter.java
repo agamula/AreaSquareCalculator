@@ -66,18 +66,17 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
     private List<List<Float>> squareValues;
     private List<Float> avgValues;
     private List<List<String>> paths;
-    private final SQLiteDatabase mDatabase;
+    private PointHelper mPointHelper;
     private final Fragment fragment;
     private int ppmIndex;
     private final OnInfoFilledListener onInfoFilledListener;
 
     public CalculatePpmSimpleAdapter(Fragment fragment, OnInfoFilledListener
             onInfoFilledListener, AvgPointHelper avgPointHelper, SquarePointHelper
-                                             mSquarePointHelper, List<Long> avgPointIds) {
+                                             mSquarePointHelper, PointHelper mPointHelper,
+                                     List<Long> avgPointIds) {
         this.fragment = fragment;
         this.onInfoFilledListener = onInfoFilledListener;
-        SQLiteHelper helper = InterpolationCalculator.getInstance().getSqLiteHelper();
-        mDatabase = helper.getWritableDatabase();
 
         this.avgPointIds = avgPointIds;
         this.avgPointHelper = avgPointHelper;
@@ -93,14 +92,14 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
             squareValues.add(squares);
         }
 
-        PointHelper pointHelper = new PointHelper(mDatabase);
+        this.mPointHelper = mPointHelper;
 
         for (int i = 0; i < avgPointIds.size(); i++) {
             List<Long> squareIds = squarePointHelper.getSquarePointIds(avgPointIds.get(i));
             for (int j = 0; j < squareIds.size(); j++) {
                 long squareId = squareIds.get(j);
 
-                List<PointF> points = pointHelper.getPoints(squareId);
+                List<PointF> points = mPointHelper.getPoints(squareId);
                 if (!points.isEmpty()) {
                     squareValues.get(i).set(j, CalculateUtils.calculateSquare(points));
                 }
@@ -422,15 +421,13 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
         long squareId = squarePointHelper.getSquarePointIds(avgPointIds.get(row)).get(column);
 
-        PointHelper pointHelper = new PointHelper(mDatabase);
-
         List<PointF> points = DocParser.parse(f);
 
-        List<PointF> dbPoints = pointHelper.getPoints(squareId);
+        List<PointF> dbPoints = mPointHelper.getPoints(squareId);
         if (dbPoints.isEmpty()) {
-            pointHelper.addPoints(squareId, points);
+            mPointHelper.addPoints(squareId, points);
         } else {
-            pointHelper.updatePoints(squareId, points);
+            mPointHelper.updatePoints(squareId, points);
         }
 
         paths.get(row).set(column, path);

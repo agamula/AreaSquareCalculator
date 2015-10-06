@@ -39,7 +39,7 @@ public class AvgPointHelper {
     public void updatePpm(long avgPointId, float ppm) {
         ContentValues cv = new ContentValues(1);
         cv.put(PPM_VALUE, ppm);
-        writeDb.update(TABLE_NAME, cv, BaseColumns._ID + " = ?", new String[] {avgPointId + ""});
+        writeDb.update(TABLE_NAME, cv, BaseColumns._ID + " = ?", new String[]{avgPointId + ""});
     }
 
     public float getPpmValue(long pointId) {
@@ -87,5 +87,9 @@ public class AvgPointHelper {
             squarePointHelper.deleteSquarePointId(squarePointId, project.isSimpleMeasure());
         }
         writeDb.delete(TABLE_NAME, BaseColumns._ID + " = ?", new String[] {"" + avgPointId});
+    }
+
+    public void clear() {
+        writeDb.delete(TABLE_NAME, null, null);
     }
 }

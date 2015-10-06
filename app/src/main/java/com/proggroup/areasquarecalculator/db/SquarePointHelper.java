@@ -53,9 +53,9 @@ public class SquarePointHelper {
 
     public void addSquarePointIdSimpleMeasure(long avgPointId) {
         List<Long> squarePointIds = getSquarePointIds(avgPointId);
-        if (squarePointIds.size() == Project.TABLE_MAX_COLS_COUNT) {
+        /*if (squarePointIds.size() == Project.TABLE_MAX_COLS_COUNT) {
             return;
-        }
+        }*/
         addSquarePointId(avgPointId);
     }
 
@@ -82,5 +82,9 @@ public class SquarePointHelper {
         }
         new PointHelper(writeDb).deletePoints(id);
         writeDb.delete(TABLE_NAME, BaseColumns._ID + " = ?", new String[]{id + ""});
+    }
+
+    public void clear() {
+        writeDb.delete(TABLE_NAME, null, null);
     }
 }

@@ -49,7 +49,7 @@ public class ProjectHelper {
         for (long id : avgPointHelper.getAvgPoints()) {
             avgPointHelper.deleteAvgPoint(id);
         }
-        writeDb.delete(Project.TABLE_NAME, BaseColumns._ID + " = ?", new String[] {project.getId() +
+        writeDb.delete(Project.TABLE_NAME, BaseColumns._ID + " = ?", new String[]{project.getId() +
                 ""});
     }
 
@@ -75,5 +75,9 @@ public class ProjectHelper {
             cursor.close();
             return new ArrayList<>(0);
         }
+    }
+
+    public void clear() {
+        writeDb.delete(Project.TABLE_NAME, null, null);
     }
 }

@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PointF;
 import android.provider.BaseColumns;
 
+import com.proggroup.areasquarecalculator.data.Project;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +66,10 @@ public class PointHelper {
     }
 
     public void deletePoints(long squarePointId) {
-        writeDb.delete(TABLE_NAME, SquarePointHelper.ID + " = ?", new String[] {"" + squarePointId});
+        writeDb.delete(TABLE_NAME, SquarePointHelper.ID + " = ?", new String[]{"" + squarePointId});
+    }
+
+    public void clear() {
+        writeDb.delete(TABLE_NAME, null, null);
     }
 }

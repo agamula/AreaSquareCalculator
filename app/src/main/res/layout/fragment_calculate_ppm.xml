@@ -32,6 +32,12 @@
                 android:visibility="gone">
 
                 <Button
+                    android:id="@+id/simple_ppm_btn_reset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reset" />
+
+                <Button
                     android:id="@+id/simple_ppm_btn_addRow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

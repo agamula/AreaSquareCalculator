@@ -27,6 +27,7 @@ import com.proggroup.areasquarecalculator.adapters.CalculatePpmSimpleAdapter;
 import com.proggroup.areasquarecalculator.data.PrefConstants;
 import com.proggroup.areasquarecalculator.data.Project;
 import com.proggroup.areasquarecalculator.db.AvgPointHelper;
+import com.proggroup.areasquarecalculator.db.PointHelper;
 import com.proggroup.areasquarecalculator.db.ProjectHelper;
 import com.proggroup.areasquarecalculator.db.SQLiteHelper;
 import com.proggroup.areasquarecalculator.db.SquarePointHelper;
@@ -65,6 +66,12 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     private View loadPpmCurve, savePpmCurve;
     private List<Float> ppmPoints, avgSquarePoints;
     private LinearLayout avgPointsLayout;
+    private View resetDatabase;
+
+    private ProjectHelper mProjectHelper;
+    private AvgPointHelper mAvgPointHelper;
+    private SquarePointHelper mSquarePointHelper;
+    private PointHelper mPointHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,6 +86,8 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         calculatePpmLayout = view.findViewById(R.id.calculate_ppm_layout);
 
         loadPpmCurve = view.findViewById(R.id.load_ppm_curve);
+
+        resetDatabase = view.findViewById(R.id.simple_ppm_btn_reset);
 
         savePpmCurve = view.findViewById(R.id.save_ppm_curve);
 
@@ -120,59 +129,55 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
             }
         });
 
+        resetDatabase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SQLiteDatabase database = InterpolationCalculator.getInstance().getSqLiteHelper()
+                        .getWritableDatabase();
+                mAvgPointHelper.clear();
+                mSquarePointHelper.clear();
+                new PointHelper(database).clear();
+                mProjectHelper.clear();
+                mProjectHelper.startInit(database);
+                adapter = new CalculatePpmSimpleAdapter(CalculatePpmSimpleFragment.this,
+                        CalculatePpmSimpleFragment.this,
+                        mAvgPointHelper,
+                        mSquarePointHelper,
+                        mPointHelper,
+                        initAdapterDataAndHelpersFromDatabase(false));
+
+                SharedPreferences prefs = InterpolationCalculator.getInstance().getSharedPreferences();
+                prefs.edit().remove(PrefConstants.INFO_IS_READY).apply();
+
+                        initLayouts();
+
+                mGridView.setAdapter(adapter);
+            }
+        });
+
         resultPpm = (TextView) view.findViewById(R.id.result_ppm);
 
         avgValue = (EditText) view.findViewById(R.id.avg_value);
 
-        SharedPreferences prefs = InterpolationCalculator.getInstance().getSharedPreferences();
-
-        if (prefs.contains(PrefConstants.INFO_IS_READY)) {
-            calculatePpmLayout.setVisibility(View.VISIBLE);
-            savePpmCurve.setVisibility(View.VISIBLE);
-        } else {
-            calculatePpmLayout.setVisibility(View.GONE);
-            savePpmCurve.setVisibility(View.GONE);
-        }
-
-        SQLiteHelper helper = InterpolationCalculator.getInstance().getSqLiteHelper();
-        SQLiteDatabase mDatabase = helper.getWritableDatabase();
-        Project project = new ProjectHelper(mDatabase).getProjects().get(0);
-
-        final AvgPointHelper avgPointHelper = new AvgPointHelper(mDatabase, project);
-
-        boolean isFirstInit = avgPointHelper.getAvgPoints().isEmpty();
-
-        if (isFirstInit) {
-            for (int i = 0; i < Project.TABLE_MIN_ROWS_COUNT; i++) {
-                avgPointHelper.addAvgPoint();
-            }
-        }
-        List<Long> avgPointIds = avgPointHelper.getAvgPoints();
-
-        final SquarePointHelper squarePointHelper = new SquarePointHelper(mDatabase);
-
-        if (isFirstInit) {
-            for (long avgPoint : avgPointIds) {
-                for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
-                    squarePointHelper.addSquarePointIdSimpleMeasure(avgPoint);
-                }
-            }
-        }
+        initLayouts();
 
         buttonsLayout = view.findViewById(R.id.buttons_layout);
 
         btnAddRow = (Button) view.findViewById(R.id.simple_ppm_btn_addRow);
 
-        adapter = new CalculatePpmSimpleAdapter(this, this, avgPointHelper, squarePointHelper, avgPointIds);
+        List<Long> avgPointIds = initAdapterDataAndHelpersFromDatabase(true);
+
+        adapter = new CalculatePpmSimpleAdapter(this, this, mAvgPointHelper, mSquarePointHelper,
+                mPointHelper, avgPointIds);
 
         mGridView.setAdapter(adapter);
 
         btnAddRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long id = avgPointHelper.addAvgPoint();
+                long id = mAvgPointHelper.addAvgPoint();
                 for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
-                    squarePointHelper.addSquarePointIdSimpleMeasure(id);
+                    mSquarePointHelper.addSquarePointIdSimpleMeasure(id);
                 }
 
                 CalculatePpmSimpleAdapter adapter = ((CalculatePpmSimpleAdapter) mGridView
@@ -233,9 +238,73 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     }
 
     /**
+     * Init layout accord to data.
+     */
+    private void initLayouts() {
+        SharedPreferences prefs = InterpolationCalculator.getInstance().getSharedPreferences();
+
+        if (prefs.contains(PrefConstants.INFO_IS_READY)) {
+            calculatePpmLayout.setVisibility(View.VISIBLE);
+            savePpmCurve.setVisibility(View.VISIBLE);
+            buttonsLayout.setVisibility(View.VISIBLE);
+        } else {
+            calculatePpmLayout.setVisibility(View.GONE);
+            savePpmCurve.setVisibility(View.GONE);
+            buttonsLayout.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Init database if it's empty.
+     *
+     * @param isCreatingHelpers true if helpers are null and need to be created.
+     * @return List of id's average square points.
+     */
+    private List<Long> initAdapterDataAndHelpersFromDatabase(boolean isCreatingHelpers) {
+        SQLiteHelper helper = InterpolationCalculator.getInstance().getSqLiteHelper();
+        SQLiteDatabase mDatabase = helper.getWritableDatabase();
+
+        if(isCreatingHelpers) {
+            mProjectHelper = new ProjectHelper(mDatabase);
+        }
+
+        Project project = mProjectHelper.getProjects().get(0);
+
+        if(isCreatingHelpers) {
+            mAvgPointHelper = new AvgPointHelper(mDatabase, project);
+        }
+
+        boolean isFirstInit = mAvgPointHelper.getAvgPoints().isEmpty();
+
+        if (isFirstInit) {
+            for (int i = 0; i < Project.TABLE_MIN_ROWS_COUNT; i++) {
+                mAvgPointHelper.addAvgPoint();
+            }
+        }
+        List<Long> avgPointIds = mAvgPointHelper.getAvgPoints();
+
+        if(isCreatingHelpers) {
+            mSquarePointHelper = new SquarePointHelper(mDatabase);
+        }
+
+        if(isCreatingHelpers) {
+            mPointHelper = new PointHelper(mDatabase);
+        }
+
+        if (isFirstInit) {
+            for (long avgPoint : avgPointIds) {
+                for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
+                    mSquarePointHelper.addSquarePointIdSimpleMeasure(avgPoint);
+                }
+            }
+        }
+        return avgPointIds;
+    }
+
+    /**
      * Fill ppmPoints and avgSquarePoints from database.
      *
-     * @param ppmPoints PpmPoints, that will be filled from database.
+     * @param ppmPoints       PpmPoints, that will be filled from database.
      * @param avgSquarePoints Average square points, that will be filled from database
      */
     private void fillPpmAndSquaresFromDatabase(List<Float> ppmPoints, List<Float> avgSquarePoints) {
@@ -270,8 +339,8 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     /**
      * Search ppm value from square and saved data of ppmPoints and avgSquarePoints.
      *
-     * @param square Square, ppm for which is searching.
-     * @param ppmPoints Ppm values, which will be used for approximation.
+     * @param square          Square, ppm for which is searching.
+     * @param ppmPoints       Ppm values, which will be used for approximation.
      * @param avgSquarePoints Average square values, which will be used for approximation.
      * @return Searched ppm value.
      */
