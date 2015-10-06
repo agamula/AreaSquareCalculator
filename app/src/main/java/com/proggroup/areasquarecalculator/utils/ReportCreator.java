@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ReportCreator {
 
-    private static final String CSV_COL_DELiM = ",";
+    public static final String CSV_COL_DELiM = ",";
 
     public static boolean createReport(CalculatePpmSimpleAdapter adapter, int numColumns, String
                                     tableName){

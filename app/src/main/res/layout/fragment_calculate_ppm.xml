@@ -46,41 +46,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/solve_line_equation_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/text_margin_default"
-                android:gravity="center_vertical"
-                android:visibility="gone">
-
-                <Button
-                    android:id="@+id/solve_line_equation"
-                    style="@style/ButtonDefaultStyle"
-                    android:layout_width="wrap_content"
-                    android:text="@string/solve_equation"/>
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ProgressBar
-                        android:id="@+id/solve_progress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:indeterminate="false"
-                        android:visibility="gone"/>
-
-                    <TextView
-                        android:id="@+id/solved_formula"
-                        style="@style/TextViewDefaultStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </FrameLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/calculate_ppm_simple_layout"
+                android:id="@+id/calculate_ppm_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/text_margin_default"
@@ -117,16 +83,56 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/result_ppm_simple"
+                        android:id="@+id/result_ppm"
                         style="@style/TextViewDefaultStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
                     <Button
-                        android:id="@+id/calculate_ppm_simple"
+                        android:id="@+id/calculate_ppm"
                         style="@style/ButtonDefaultStyle"
                         android:layout_width="wrap_content"
                         android:text="@string/calculate_ppm_simple"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/avg_points"
+                    android:orientation="horizontal">
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left|start">
+                    <Button
+                        android:id="@+id/load_ppm_curve"
+                        style="@style/ButtonDefaultStyle"
+                        android:layout_width="wrap_content"
+                        android:text="@string/load_avgs_from_file"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right|end">
+                    <Button
+                        android:id="@+id/save_ppm_curve"
+                        style="@style/ButtonDefaultStyle"
+                        android:layout_width="wrap_content"
+                        android:text="@string/save_avgs_from_file"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
