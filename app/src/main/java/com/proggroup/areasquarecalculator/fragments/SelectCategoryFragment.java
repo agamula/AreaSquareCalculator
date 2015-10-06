@@ -61,9 +61,6 @@ public class SelectCategoryFragment extends ListFragment implements LoaderManage
                 activity.startFragmentToDefaultContainer(new CalculatePpmSimpleFragment(), false);
                 activity.closeDrawer();
                 break;
-            case 2:
-                //TODO need to implement
-                break;
         }
     }
 

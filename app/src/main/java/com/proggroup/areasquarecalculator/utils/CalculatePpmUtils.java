@@ -17,6 +17,15 @@ import java.util.List;
 
 public class CalculatePpmUtils {
 
+    private CalculatePpmUtils() {
+    }
+
+    /**
+     * Parse ppm and average square values.
+     *
+     * @param path Path to csv file average values of ppm, square must be loaded from.
+     * @return List of ppm, and list of average square values in pair.
+     */
     public static Pair<List<Float>, List<Float>> parseAvgValuesFromFile(String path) {
         List<Float> ppmValues = new ArrayList<>();
         List<Float> avgSquareValues = new ArrayList<>();
@@ -38,6 +47,13 @@ public class CalculatePpmUtils {
         return new Pair<>(ppmValues, avgSquareValues);
     }
 
+    /**
+     *
+     * @param ppmValues PPm known values, is actually filled from table.
+     * @param avgSquareValues Average square values, is filled from table.
+     * @param path Path to folder for save values.
+     * @return Result: true - for success, false - for fail.
+     */
     public static boolean saveAvgValuesToFile(List<Float> ppmValues, List<Float> avgSquareValues, String
             path) {
         try {

@@ -28,7 +28,7 @@ public class PointHelper {
     }
 
     public List<PointF> getPoints(long squarePointId) {
-        Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{POINT_X, POINT_Y},
+        Cursor cursor = writeDb.query(TABLE_NAME, new String[]{POINT_X, POINT_Y},
                 SquarePointHelper.ID + " = ?", new String[]{"" + squarePointId}, null, null, null);
 
         if (cursor.moveToFirst()) {

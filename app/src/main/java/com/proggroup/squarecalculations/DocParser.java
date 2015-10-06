@@ -13,6 +13,12 @@ import java.util.concurrent.TimeUnit;
 
 public class DocParser {
 
+    /**
+     * Parses file, and return result list.
+     *
+     * @param f File for read point values.
+     * @return List of points, readed from file.
+     */
     public static List<PointF> parse(File f) {
         BufferedReader reader = null;
         try {
@@ -48,6 +54,12 @@ public class DocParser {
         return points;
     }
 
+    /**
+     * Convert time from String.
+     *
+     * @param time Time for parsing.
+     * @return Long representation of time.
+     */
     private static long parseTime(String time) {
         String[] splitValues = time.split(":");
 

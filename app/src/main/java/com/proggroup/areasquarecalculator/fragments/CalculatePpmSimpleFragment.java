@@ -44,7 +44,14 @@ import java.util.TreeMap;
 
 public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpmSimpleAdapter.OnInfoFilledListener {
 
-    private static final int LOAD_PPM_AVG_VALUES = 103;
+    /**
+     * Request code for start load ppm curve file dialog.
+     */
+    private static final int LOAD_PPM_AVG_VALUES_REQUEST_CODE = 103;
+
+    /**
+     * Request code for start save ppm curve file dialog.
+     */
     private static final int SAVE_PPM_AVG_VALUES = 104;
 
     private GridView mGridView;
@@ -170,7 +177,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
 
                 CalculatePpmSimpleAdapter adapter = ((CalculatePpmSimpleAdapter) mGridView
                         .getAdapter());
-                adapter.addAvgPoint(id);
+                adapter.notifyAvgPointAdded(id);
                 buttonsLayout.setVisibility(View.GONE);
             }
         });
@@ -186,7 +193,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 intent.putExtra(FileDialog.SELECTION_MODE, SelectionMode.MODE_OPEN);
 
                 intent.putExtra(FileDialog.FORMAT_FILTER, new String[]{"csv"});
-                startActivityForResult(intent, LOAD_PPM_AVG_VALUES);
+                startActivityForResult(intent, LOAD_PPM_AVG_VALUES_REQUEST_CODE);
             }
         });
 
@@ -225,7 +232,13 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         });
     }
 
-    private void fillPpmAndSquaresFromDatabase(List<Float> ppmPoints, List<Float> squarePoints) {
+    /**
+     * Fill ppmPoints and avgSquarePoints from database.
+     *
+     * @param ppmPoints PpmPoints, that will be filled from database.
+     * @param avgSquarePoints Average square points, that will be filled from database
+     */
+    private void fillPpmAndSquaresFromDatabase(List<Float> ppmPoints, List<Float> avgSquarePoints) {
         SQLiteHelper helper = InterpolationCalculator.getInstance().getSqLiteHelper();
         SQLiteDatabase writeDb = helper.getWritableDatabase();
         Project project = new ProjectHelper(writeDb).getProjects().get(0);
@@ -245,14 +258,23 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         }
 
         ppmPoints.add(0f);
-        squarePoints.add(0f);
+        avgSquarePoints.add(0f);
 
         for (Map.Entry<Float, Float> entry : linkedMap.entrySet()) {
             ppmPoints.add(entry.getKey());
-            squarePoints.add(entry.getValue());
+            avgSquarePoints.add(entry.getValue());
         }
     }
 
+
+    /**
+     * Search ppm value from square and saved data of ppmPoints and avgSquarePoints.
+     *
+     * @param square Square, ppm for which is searching.
+     * @param ppmPoints Ppm values, which will be used for approximation.
+     * @param avgSquarePoints Average square values, which will be used for approximation.
+     * @return Searched ppm value.
+     */
     private float findPpmBySquare(float square, List<Float> ppmPoints, List<Float> avgSquarePoints) {
         for (int i = 0; i < avgSquarePoints.size() - 1; i++) {
             //check whether the point belongs to the line
@@ -274,7 +296,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case LOAD_PPM_AVG_VALUES:
+                case LOAD_PPM_AVG_VALUES_REQUEST_CODE:
                     Pair<List<Float>, List<Float>> res = CalculatePpmUtils.parseAvgValuesFromFile
                             (data.getStringExtra(FileDialog.RESULT_PATH));
 
@@ -327,6 +349,9 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         return (value < 10 ? "0" : "") + value;
     }
 
+    /**
+     * Fill layout with actual data.
+     */
     private void fillAvgPointsLayout() {
         for (int i = 0; i < ppmPoints.size(); i++) {
             TextView tv = new TextView(getActivity());

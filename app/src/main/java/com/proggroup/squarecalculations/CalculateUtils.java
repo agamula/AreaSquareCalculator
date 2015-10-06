@@ -14,6 +14,13 @@ import java.util.concurrent.Executors;
 
 public class CalculateUtils {
 
+    /**
+     * Search (a, b, c) params of equation a*x*x + b*x + c = y.
+     *
+     * @param powMatrix This will be matrix (x*x, x, 1) for each of known x (3*3 matrix)
+     * @param y         Y known values, for which we search solution.
+     * @return (a, b, c) params
+     */
     private static List<Float> calculateApproximateParams(SimpleMatrix powMatrix, List<Float> y) {
         int size = y.size();
 
@@ -37,6 +44,12 @@ public class CalculateUtils {
         return res;
     }
 
+    /**
+     * Return pow matrix for x values.
+     *
+     * @param x Known x values,
+     * @return Pow matrix (x*x, x, 1) for each of x
+     */
     private static SimpleMatrix calculatePowMatrix(List<Float> x) {
         int size = x.size();
         double xValues[][] = new double[size][size];
@@ -48,17 +61,47 @@ public class CalculateUtils {
         return new SimpleMatrix(xValues);
     }
 
+    /**
+     * Eps of detect if we can solve a*x*x + b*x + c = y equation or no.
+     */
     private static final float EPS = 1e-8f;
 
+
+    /**
+     * Detect if we can find invert matrix for param matrix.
+     *
+     * @param matrix Matrix for detect if we can find solution of 2-power equation or no.
+     * @return Result: true - for success, false - for fail.
+     */
     private static boolean canInvert(SimpleMatrix matrix) {
         double mathDet = Math.abs(matrix.determinant());
         return mathDet >= EPS;
     }
 
+    /**
+     * Find square between curve, and yCached value. Curve - approximated as line.
+     *
+     * @param xFrom   From value by x - to calculate square from.
+     * @param yFrom   From value by y - to calculate square from.
+     * @param xTo     To value by x - to calculate square from.
+     * @param yTo     To value by y - to calculate square from.
+     * @param yCached Cached value by y, to subtract area from 0 to yCached.
+     * @return Result square of region.
+     */
     private static double calculateTrapezeSquare(float xFrom, float yFrom, float xTo, float yTo, float yCached) {
         return ((yFrom + yTo) / 2) * (xTo - xFrom) - yCached * (xTo - xFrom);
     }
 
+    /**
+     * Return square below the curve a_n*x^n + a_(n-1)*x^(n-1) + ... + a_1*x + a_0 = y.
+     * n - count of funcParams values - 1.
+     *
+     * @param funcParams Calculated by method calculateApproximateParams values (a, b, c)
+     * @param xFrom      From value by x - to calculate square from.
+     * @param xTo        To value by x - to calculate square from.
+     * @param yCached    Cached value by y, to subtract area from 0 to yCached.
+     * @return Result square of region.
+     */
     private static float calculateSquare(List<Float> funcParams, Float xFrom, Float
             xTo, float yCached) {
         int size = funcParams.size();
@@ -74,6 +117,13 @@ public class CalculateUtils {
         return Math.abs(squareSize) - (xTo - xFrom) * yCached;
     }
 
+    /**
+     * Speed calculations of val^power.
+     *
+     * @param val   Value for power.
+     * @param power Degree for which we'll bring to.
+     * @return Result of val^power.
+     */
     private static float pow(float val, int power) {
         if (power == 0) {
             return 1;
@@ -85,12 +135,24 @@ public class CalculateUtils {
         }
     }
 
+    /**
+     * Search of square, using determinant for approximation. Data loaded from file.
+     *
+     * @param file File, from which values will be loaded.
+     * @return Result square.
+     */
     public static float calculateSquareDeterminant(File file) {
         List<PointF> points = DocParser.parse(file);
 
         return calculateSquareDeterminant(points);
     }
 
+    /**
+     * Search of square, using determinant for approximation. Data is pulled as param.
+     *
+     * @param points Param, used for square calculation.
+     * @return Result square.
+     */
     public static float calculateSquareDeterminant(List<PointF> points) {
 
         int startIndex = findStartIndex(points);
@@ -157,12 +219,26 @@ public class CalculateUtils {
         void onCalculatingFinished(float value);
     }
 
+    /**
+     * Search of square, using determinant for approximation. Data loaded from file. Parallel
+     * execution.
+     *
+     * @param file File, from which values will be loaded.
+     * @return Result square.
+     */
     public static float calculateSquareDeterminantParallel(File file) {
         List<PointF> points = DocParser.parse(file);
 
         return calculateSquareDeterminantParallel(points);
     }
 
+    /**
+     * Search of square, using determinant for approximation. Data is pulled as param. Parallel
+     * execution.
+     *
+     * @param points Param, used for square calculation.
+     * @return Result square.
+     */
     public static float calculateSquareDeterminantParallel(List<PointF> points) {
 
         int startIndex = findStartIndex(points);
@@ -318,6 +394,12 @@ public class CalculateUtils {
         }
     }
 
+    /**
+     * Search of first index of growing y.
+     *
+     * @param valPoints Y points, first index is searched from.
+     * @return Index of first growing value.
+     */
     private static int findStartIndex(List<PointF> valPoints) {
         for (int i = 0; i < valPoints.size() - 1; i++) {
             if (valPoints.get(i).y < valPoints.get(i + 1).y) {
@@ -327,6 +409,13 @@ public class CalculateUtils {
         return -1;
     }
 
+    /**
+     * Search of last index of growing y.
+     *
+     * @param valPoints        Y points, last index is searched from.
+     * @param cachedStartValue Cached value - search can be stopped, when we reach this value.
+     * @return Index of last growing value.
+     */
     private static int findEndIndex(List<PointF> valPoints, float cachedStartValue) {
         int len = valPoints.size();
         for (int i = len - 1; i >= 0; i--) {
@@ -338,12 +427,24 @@ public class CalculateUtils {
         return -1;
     }
 
+    /**
+     * Search of square, using java exception handling way. Data loaded from file.
+     *
+     * @param file File, from which values will be loaded.
+     * @return Result square.
+     */
     public static float calculateSquare(File file) {
         List<PointF> points = DocParser.parse(file);
 
         return calculateSquare(points);
     }
 
+    /**
+     * Search of square, using java exception handling way. Data is pulled as param.
+     *
+     * @param points Param, used for square calculation.
+     * @return Result square.
+     */
     public static float calculateSquare(List<PointF> points) {
 
         int startIndex = findStartIndex(points);

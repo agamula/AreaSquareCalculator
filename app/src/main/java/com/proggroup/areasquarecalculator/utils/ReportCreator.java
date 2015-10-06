@@ -22,6 +22,13 @@ public class ReportCreator {
 
     public static final String CSV_COL_DELiM = ",";
 
+    /**
+     *
+     * @param adapter Adapter, from which report is creating
+     * @param numColumns Count columns in table.
+     * @param tableName Name of table for saving report.
+     * @return Result: true - for success, false - for fail.
+     */
     public static boolean createReport(CalculatePpmSimpleAdapter adapter, int numColumns, String
                                     tableName){
         try {

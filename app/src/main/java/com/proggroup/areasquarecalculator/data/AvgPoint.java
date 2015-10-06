@@ -11,6 +11,10 @@ public class AvgPoint {
         cachedAvg = null;
     }
 
+    /**
+     *
+     * @return Average value of all input fields.
+     */
     public float avg() {
         if (cachedAvg == null) {
             float res = 0f;

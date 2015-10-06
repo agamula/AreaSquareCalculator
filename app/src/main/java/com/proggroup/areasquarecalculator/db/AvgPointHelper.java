@@ -43,7 +43,7 @@ public class AvgPointHelper {
     }
 
     public float getPpmValue(long pointId) {
-        Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{PPM_VALUE},
+        Cursor cursor = writeDb.query(TABLE_NAME, new String[]{PPM_VALUE},
                 BaseColumns._ID + " = ?", new String[]{"" + pointId}, null, null, null);
 
         if (cursor.moveToFirst()) {
@@ -58,7 +58,7 @@ public class AvgPointHelper {
     }
 
     public List<Long> getAvgPoints() {
-        Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{BaseColumns._ID},
+        Cursor cursor = writeDb.query(TABLE_NAME, new String[]{BaseColumns._ID},
                 Project.ID + " = ?", new String[]{"" + project.getId()}, null, null, null);
 
         if (cursor.moveToFirst()) {

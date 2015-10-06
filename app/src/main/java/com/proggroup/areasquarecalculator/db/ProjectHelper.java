@@ -54,7 +54,7 @@ public class ProjectHelper {
     }
 
     public List<Project> getProjects() {
-        Cursor cursor = writeDb/*readDb*/.query(Project.TABLE_NAME, new String[]{BaseColumns._ID,
+        Cursor cursor = writeDb.query(Project.TABLE_NAME, new String[]{BaseColumns._ID,
                 Project
                 .IS_SIMPLE_MEASURE}, null, null, null, null, null);
 

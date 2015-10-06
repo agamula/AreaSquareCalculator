@@ -38,9 +38,26 @@ import java.util.List;
 
 public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
+    /*
+     * Field is for actual data.
+     * Can be loaded from csv file, or database if it's filled
+     */
     public static final int ITEM_ID_DATA = 0;
+
+    /*
+     * Field is for header
+     * Loading from array resource.
+     */
     public static final int ITEM_ID_HEADER = 1;
+
+    /*
+     * Field is for result of avg calculations of available data.
+     */
     public static final int ITEM_ID_CALC_AVG_RESULT = 3;
+
+    /*
+     * Field is for input ppm of value
+     */
     public static final int ITEM_ID_KNOWN_PPM = 4;
 
     private SquarePointHelper squarePointHelper;
@@ -111,15 +128,29 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         checkAvgValues();
     }
 
+
+    /**
+     *
+     * @return Square values, calculated from all loaded csv files.
+     */
     public List<List<Float>> getSquareValues() {
         return squareValues;
     }
 
+    /**
+     *
+     * @return Average square values, calculated for each of rows.
+     */
     public List<Float> getAvgValues() {
         return avgValues;
     }
 
-    public void addAvgPoint(long avgPointId) {
+    /**
+     * Notify of adding new avgPoint to database.
+     *
+     * @param avgPointId Id of new avgPoint is added to database.
+     */
+    public void notifyAvgPointAdded(long avgPointId) {
         avgPointIds.add(avgPointId);
         List<Float> points = new ArrayList<>(Project.TABLE_MAX_COLS_COUNT);
         for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
@@ -321,8 +352,12 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         return convertView;
     }
 
+    /**
+     * Calculate avg value for row index
+     *
+     * @param indexAvg row index
+     */
     public void calculateAvg(int indexAvg) {
-
         for (int i = 0; i < paths.size(); i++) {
             if (paths.get(indexAvg).get(i) != null) {
                 File f = new File(paths.get(indexAvg).get(i));
@@ -339,6 +374,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * Remove 0 values from list.
+     */
     private List<Float> remove0List(List<Float> values) {
         List<Float> res = new ArrayList<>(values.size());
         for (float val : values) {
@@ -349,6 +387,13 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         return res;
     }
 
+    /**
+     * Update adapter values accord to actual data
+     *
+     * @param row    Row index
+     * @param column Column index
+     * @param path   Path to file csv is loaded from
+     */
     public void updateSquare(int row, int column, String path) {
         List<Float> squares = squareValues.get(row);
         File f = new File(path);
@@ -392,6 +437,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * Check if all values are filled, and invoke ready listener if it is.
+     */
     private void checkAvgValues() {
         for (float avgValue : avgValues) {
             if (avgValue == 0f) {
@@ -405,6 +453,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         void onInfoFilled();
     }
 
+    /**
+     * Watcher for ppm value changed.
+     */
     private class PpmWatcher implements TextWatcher {
 
         private final int index;
@@ -441,6 +492,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * Watcher for path changed.
+     */
     private class PathChangeWatcher implements TextWatcher {
 
         private final int row, column;

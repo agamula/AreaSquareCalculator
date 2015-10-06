@@ -26,7 +26,7 @@ public class SquarePointHelper {
     }
 
     public List<Long> getSquarePointIds(long avgPointId) {
-        Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{BaseColumns._ID},
+        Cursor cursor = writeDb.query(TABLE_NAME, new String[]{BaseColumns._ID},
                 AvgPointHelper.ID + " = ?", new String[]{"" + avgPointId}, null, null, null);
 
         if (cursor.moveToFirst()) {
@@ -60,7 +60,7 @@ public class SquarePointHelper {
     }
 
     private long getAvgPointId(long squarePointId) {
-        Cursor cursor = writeDb/*readDb*/.query(TABLE_NAME, new String[]{AvgPointHelper.ID},
+        Cursor cursor = writeDb.query(TABLE_NAME, new String[]{AvgPointHelper.ID},
                 BaseColumns._ID + " = ?", new String[]{"" + squarePointId}, null, null, null);
 
         if (cursor.moveToFirst()) {
