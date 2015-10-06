@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.proggroup.areasquarecalculator.R;
-import com.proggroup.areasquarecalculator.activities.MainActivity;
+import com.proggroup.areasquarecalculator.activities.IActivityCallback;
 import com.proggroup.areasquarecalculator.loaders.LoadCategoriesLoader;
 
 import java.util.List;
@@ -48,18 +48,20 @@ public class SelectCategoryFragment extends ListFragment implements LoaderManage
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        Activity activity = getActivity();
+        IActivityCallback callback = activity instanceof IActivityCallback ? (IActivityCallback)
+                 activity : null;
+
         switch (position) {
             case 0:
-                MainActivity activity = (MainActivity) getActivity();
-                activity.popAllDefaultContainer();
-                activity.startFragmentToDefaultContainer(new CalculateSquareAreaFragment(), false);
-                activity.closeDrawer();
+                callback.popAllDefaultContainer();
+                callback.startFragmentToDefaultContainer(new CalculateSquareAreaFragment(), false);
+                callback.closeDrawer();
                 break;
             case 1:
-                activity = (MainActivity) getActivity();
-                activity.popAllDefaultContainer();
-                activity.startFragmentToDefaultContainer(new CalculatePpmSimpleFragment(), false);
-                activity.closeDrawer();
+                callback.popAllDefaultContainer();
+                callback.startFragmentToDefaultContainer(new CalculatePpmSimpleFragment(), false);
+                callback.closeDrawer();
                 break;
         }
     }

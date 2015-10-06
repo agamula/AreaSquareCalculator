@@ -20,7 +20,7 @@ import com.proggroup.areasquarecalculator.R;
 import com.proggroup.areasquarecalculator.fragments.CalculateSquareAreaFragment;
 import com.proggroup.areasquarecalculator.fragments.SelectCategoryFragment;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements IActivityCallback{
 
     private DrawerLayout mDrawerLayout;
     private View mFragmentContainerView;
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity{
         manager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }
 
+    @Override
     public void startFragment(Fragment fragment, int containerId, boolean addToBackStack) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(containerId, fragment);
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity{
         transaction.commit();
     }
 
+    @Override
     public void startFragmentToDefaultContainer(Fragment fragment, boolean addToBackStack) {
         startFragment(fragment, R.id.fragment_container, addToBackStack);
     }
@@ -62,10 +64,12 @@ public class MainActivity extends AppCompatActivity{
                 .POP_BACK_STACK_INCLUSIVE);
     }
 
+    @Override
     public void popAllDefaultContainer() {
         popAll(R.id.fragment_container);
     }
 
+    @Override
     public void closeDrawer() {
         mDrawerLayout.closeDrawer(mFragmentContainerView);
     }
