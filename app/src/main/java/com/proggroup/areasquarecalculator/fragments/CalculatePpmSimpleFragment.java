@@ -149,7 +149,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 SharedPreferences prefs = InterpolationCalculator.getInstance().getSharedPreferences();
                 prefs.edit().remove(PrefConstants.INFO_IS_READY).apply();
 
-                        initLayouts();
+                initLayouts();
 
                 mGridView.setAdapter(adapter);
             }
@@ -159,9 +159,9 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
 
         avgValue = (EditText) view.findViewById(R.id.avg_value);
 
-        initLayouts();
-
         buttonsLayout = view.findViewById(R.id.buttons_layout);
+
+        initLayouts();
 
         btnAddRow = (Button) view.findViewById(R.id.simple_ppm_btn_addRow);
 
