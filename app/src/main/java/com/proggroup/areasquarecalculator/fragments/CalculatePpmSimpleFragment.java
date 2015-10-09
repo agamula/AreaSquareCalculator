@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -57,12 +58,13 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     private static final int SAVE_PPM_AVG_VALUES = 104;
 
     private GridView mGridView;
-    private View calculatePpmLayout;
-    private TextView resultPpm;
-    private EditText avgValue;
+    private View calculatePpmLayout, calculatePpmLayoutLoaded;
+    private TextView resultPpm, resultPpmLoaded;
+    private EditText avgValue, avgValueLoaded;
     private CalculatePpmSimpleAdapter adapter;
-    private View calculatePpmSimple;
-    private Button btnAddRow, btnGenerateTable;
+
+    private View calculatePpmSimple, calculatePpmSimpleLoaded;
+    private Button btnAddRow;
     private View buttonsLayout;
     private View loadPpmCurve, savePpmCurve;
     private List<Float> ppmPoints, avgSquarePoints;
@@ -86,6 +88,8 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
 
         calculatePpmLayout = view.findViewById(R.id.calculate_ppm_layout);
 
+        calculatePpmLayoutLoaded = view.findViewById(R.id.calculate_ppm_layout_loaded);
+
         loadPpmCurve = view.findViewById(R.id.load_ppm_curve);
 
         resetDatabase = view.findViewById(R.id.simple_ppm_btn_reset);
@@ -97,6 +101,32 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         ppmPoints = new ArrayList<>();
         avgSquarePoints = new ArrayList<>();
 
+        calculatePpmSimpleLoaded = view.findViewById(R.id.calculate_ppm_loaded);
+
+        calculatePpmSimpleLoaded.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (avgValueLoaded.getText().toString().isEmpty()) {
+                    Toast.makeText(getActivity(), R.string.input_avg_value, Toast.LENGTH_LONG)
+                            .show();
+                    return;
+                }
+                float avgValueY = Float.parseFloat(avgValueLoaded.getText().toString());
+                float value;
+                try {
+                    value = findPpmBySquare(avgValueY, ppmPoints, avgSquarePoints);
+                } catch (Exception e) {
+                    value = -1;
+                }
+
+                if (value == -1) {
+                    Toast.makeText(getActivity(), R.string.wrong_data, Toast.LENGTH_LONG).show();
+                } else {
+                    resultPpmLoaded.setText(FloatFormatter.format(value));
+                }
+            }
+        });
+
         calculatePpmSimple = view.findViewById(R.id.calculate_ppm);
         calculatePpmSimple.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,16 +137,11 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                     return;
                 }
                 float avgValueY = Float.parseFloat(avgValue.getText().toString());
-                float value = -1;
+                float value;
                 try {
                     List<Float> ppmPoints = new ArrayList<>();
                     List<Float> avgSquarePoints = new ArrayList<>();
-                    if (ppmPoints.isEmpty() || avgSquarePoints.isEmpty()) {
-                        fillPpmAndSquaresFromDatabase(ppmPoints, avgSquarePoints);
-                    } else {
-                        ppmPoints.addAll(CalculatePpmSimpleFragment.this.ppmPoints);
-                        avgSquarePoints.addAll(CalculatePpmSimpleFragment.this.avgSquarePoints);
-                    }
+                    fillPpmAndSquaresFromDatabase(ppmPoints, avgSquarePoints);
                     value = findPpmBySquare(avgValueY, ppmPoints, avgSquarePoints);
                 } catch (Exception e) {
                     value = -1;
@@ -158,7 +183,11 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
 
         resultPpm = (TextView) view.findViewById(R.id.result_ppm);
 
+        resultPpmLoaded = (TextView) view.findViewById(R.id.result_ppm_loaded);
+
         avgValue = (EditText) view.findViewById(R.id.avg_value);
+
+        avgValueLoaded = (EditText) view.findViewById(R.id.avg_value_loaded);
 
         buttonsLayout = view.findViewById(R.id.buttons_layout);
 
@@ -219,26 +248,6 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 startActivityForResult(intent, SAVE_PPM_AVG_VALUES);
             }
         });
-
-        btnGenerateTable = (Button) view.findViewById(R.id.generate_csv);
-        btnGenerateTable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String fileName = "table";
-                File f = new File(Environment.getExternalStorageDirectory(), fileName + ".csv");
-                if (!f.exists()) {
-                    try {
-                        f.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (ReportCreator.createReport((CalculatePpmSimpleAdapter) mGridView
-                        .getAdapter(), 6, "table")) {
-                    Toast.makeText(getActivity(), "Write success", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
     }
 
     /**
@@ -268,13 +277,13 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         SQLiteHelper helper = InterpolationCalculator.getInstance().getSqLiteHelper();
         SQLiteDatabase mDatabase = helper.getWritableDatabase();
 
-        if(isCreatingHelpers) {
+        if (isCreatingHelpers) {
             mProjectHelper = new ProjectHelper(mDatabase);
         }
 
         Project project = mProjectHelper.getProjects().get(0);
 
-        if(isCreatingHelpers) {
+        if (isCreatingHelpers) {
             mAvgPointHelper = new AvgPointHelper(mDatabase, project);
         }
 
@@ -287,11 +296,11 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         }
         List<Long> avgPointIds = mAvgPointHelper.getAvgPoints();
 
-        if(isCreatingHelpers) {
+        if (isCreatingHelpers) {
             mSquarePointHelper = new SquarePointHelper(mDatabase);
         }
 
-        if(isCreatingHelpers) {
+        if (isCreatingHelpers) {
             mPointHelper = new PointHelper(mDatabase);
         }
 
@@ -366,7 +375,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case LOAD_PPM_AVG_VALUES_REQUEST_CODE:
@@ -386,30 +395,54 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
 
                     Calendar calendar = Calendar.getInstance();
 
-                    String name = "CAL_" + formatAddLeadingZero(calendar.get(Calendar
+                    final String timeName = "CAL_" + formatAddLeadingZero(calendar.get(Calendar
                             .DAY_OF_MONTH)) + formatAddLeadingZero(calendar.get
                             (Calendar.MONTH)) + formatAddLeadingZero(calendar.get(Calendar.YEAR))
                             + "_" + formatAddLeadingZero(calendar.get
                             (Calendar.HOUR_OF_DAY)) + formatAddLeadingZero(calendar.get(Calendar
-                            .MINUTE)) + formatAddLeadingZero(calendar.get(Calendar.SECOND)) + "" +
-                            ".csv";
-                    File pathFile = new File(data
-                            .getStringExtra(FileDialog.RESULT_PATH), name);
+                            .MINUTE)) + formatAddLeadingZero(calendar.get(Calendar.SECOND));
 
-                    pathFile.getParentFile().mkdirs();
-                    try {
-                        pathFile.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                    if (CalculatePpmUtils.saveAvgValuesToFile(ppmPoints, avgSquarePoints, pathFile
-                            .getAbsolutePath())) {
-                        avgPointsLayout.removeAllViews();
-                        fillAvgPointsLayout();
-                        Toast.makeText(getActivity(), "Save success as" + name, Toast.LENGTH_LONG)
-                                .show();
-                    }
+                    View contentView = LayoutInflater.from(getActivity()).inflate(R.layout
+                            .save_additional_options_layout, null);
+
+                    final EditText editFileName = (EditText) contentView.findViewById(R.id
+                             .edit_file_name);
+
+                    builder.setView(contentView);
+                    builder.setCancelable(true);
+
+                    final AlertDialog dialog = builder.show();
+
+                    contentView.findViewById(R.id.save_curve).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String name = timeName + "_" + editFileName.getText().toString() +
+                                    ".csv";
+
+                            File pathFile = new File(data
+                                    .getStringExtra(FileDialog.RESULT_PATH), name);
+
+                            pathFile.getParentFile().mkdirs();
+                            try {
+                                pathFile.createNewFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (CalculatePpmUtils.saveAvgValuesToFile((CalculatePpmSimpleAdapter) mGridView
+                                    .getAdapter(), 6, pathFile.getAbsolutePath())) {
+                                avgPointsLayout.removeAllViews();
+                                fillAvgPointsLayout();
+                                Toast.makeText(getActivity(), "Save success as" + name, Toast.LENGTH_LONG)
+                                        .show();
+                            }
+
+                            dialog.dismiss();
+                        }
+                    });
+
                     break;
                 default:
                     int row = requestCode / Project.TABLE_MAX_COLS_COUNT;
@@ -428,6 +461,8 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
      * Fill layout with actual data.
      */
     private void fillAvgPointsLayout() {
+        avgPointsLayout.removeAllViews();
+
         for (int i = 0; i < ppmPoints.size(); i++) {
             TextView tv = new TextView(getActivity());
             tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen
@@ -437,6 +472,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
 
             avgPointsLayout.addView(tv);
         }
+        calculatePpmLayoutLoaded.setVisibility(View.VISIBLE);
     }
 
     @Override

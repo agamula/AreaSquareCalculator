@@ -26,29 +26,28 @@
                 android:verticalSpacing="1dp"/>
 
             <LinearLayout
+                android:id="@+id/buttons_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/buttons_layout"
                 android:visibility="gone">
 
                 <Button
                     android:id="@+id/simple_ppm_btn_reset"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Reset" />
+                    android:text="Reset"/>
 
                 <Button
                     android:id="@+id/simple_ppm_btn_addRow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Add row" />
+                    android:text="Add row"/>
 
                 <Button
-                    android:id="@+id/generate_csv"
+                    android:id="@+id/save_ppm_curve"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Generate table (table.csv)"/>
-
+                    android:text="@string/save_avgs_from_file"/>
             </LinearLayout>
 
             <LinearLayout
@@ -102,43 +101,85 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <HorizontalScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/avg_points"
-                    android:orientation="horizontal">
-                </LinearLayout>
-            </HorizontalScrollView>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="left|start">
+
                     <Button
                         android:id="@+id/load_ppm_curve"
                         style="@style/ButtonDefaultStyle"
                         android:layout_width="wrap_content"
                         android:text="@string/load_avgs_from_file"/>
                 </LinearLayout>
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp">
+
+                <LinearLayout
+                    android:id="@+id/avg_points"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:id="@+id/calculate_ppm_layout_loaded"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/text_margin_default"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="2">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="right|end">
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextViewDefaultStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/enter_avg_square"/>
+
+                    <EditText
+                        android:id="@+id/avg_value_loaded"
+                        style="@style/EditTextDefaultStyle"
+                        android:layout_width="match_parent"
+                        android:digits="0123456789."
+                        android:imeOptions="actionDone"
+                        android:inputType="number"
+                        android:singleLine="true"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/result_ppm_loaded"
+                        style="@style/TextViewDefaultStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
                     <Button
-                        android:id="@+id/save_ppm_curve"
+                        android:id="@+id/calculate_ppm_loaded"
                         style="@style/ButtonDefaultStyle"
                         android:layout_width="wrap_content"
-                        android:text="@string/save_avgs_from_file"/>
+                        android:text="@string/calculate_loaded_ppm_simple"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
