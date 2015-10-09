@@ -44,8 +44,6 @@ public class CalculateSquareAreaFragment extends Fragment {
                 Intent intent = new Intent(getActivity().getBaseContext(), FileDialog.class);
                 intent.putExtra(FileDialog.START_PATH, Environment.getExternalStorageDirectory()
                         .getAbsolutePath());
-                intent.putExtra(FileDialog.ROOT_PATH, Constants.BASE_DIRECTORY
-                        .getAbsolutePath());
                 intent.putExtra(FileDialog.SELECTION_MODE, SelectionMode.MODE_OPEN);
 
                 intent.putExtra(FileDialog.FORMAT_FILTER, new String[]{"csv"});

@@ -3,7 +3,7 @@
     <color name="color_text">#405565</color>
     <color name="ab_background">#ffffed</color>
     <color name="drawer_color">#dce5de</color>
-    <color name="app_background">#fffbfb</color>
+    <color name="app_background">#d7d7d7</color>
     <color name="header_color">#bababa</color>
     <color name="edit_disabled">#cacaca</color>
     <color name="grid_color">#7a7a7a</color>
