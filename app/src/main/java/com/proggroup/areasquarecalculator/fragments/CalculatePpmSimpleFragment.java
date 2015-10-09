@@ -24,6 +24,7 @@ import com.lamerman.SelectionMode;
 import com.proggroup.areasquarecalculator.InterpolationCalculator;
 import com.proggroup.areasquarecalculator.R;
 import com.proggroup.areasquarecalculator.adapters.CalculatePpmSimpleAdapter;
+import com.proggroup.areasquarecalculator.data.Constants;
 import com.proggroup.areasquarecalculator.data.PrefConstants;
 import com.proggroup.areasquarecalculator.data.Project;
 import com.proggroup.areasquarecalculator.db.AvgPointHelper;
@@ -193,7 +194,9 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 avgPointsLayout.removeAllViews();
                 Intent intent = new Intent(getActivity().getBaseContext(), FileDialog
                         .class);
-                intent.putExtra(FileDialog.START_PATH, Environment.getExternalStorageDirectory()
+                intent.putExtra(FileDialog.START_PATH, Constants.BASE_DIRECTORY
+                        .getAbsolutePath());
+                intent.putExtra(FileDialog.ROOT_PATH, Constants.BASE_DIRECTORY
                         .getAbsolutePath());
                 intent.putExtra(FileDialog.SELECTION_MODE, SelectionMode.MODE_OPEN);
 
@@ -207,9 +210,10 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity().getBaseContext(), FileDialog
                         .class);
-                intent.putExtra(FileDialog.START_PATH, Environment.getExternalStorageDirectory()
+                intent.putExtra(FileDialog.START_PATH, Constants.BASE_DIRECTORY
                         .getAbsolutePath());
-                intent.putExtra(FileDialog.SELECTION_MODE, SelectionMode.MODE_OPEN);
+                intent.putExtra(FileDialog.ROOT_PATH, Constants.BASE_DIRECTORY
+                        .getAbsolutePath());
                 intent.putExtra(FileDialog.CAN_SELECT_DIR, true);
 
                 startActivityForResult(intent, SAVE_PPM_AVG_VALUES);
@@ -391,6 +395,8 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                             ".csv";
                     File pathFile = new File(data
                             .getStringExtra(FileDialog.RESULT_PATH), name);
+
+                    pathFile.getParentFile().mkdirs();
                     try {
                         pathFile.createNewFile();
                     } catch (IOException e) {

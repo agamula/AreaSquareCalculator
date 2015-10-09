@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.lamerman.FileDialog;
 import com.lamerman.SelectionMode;
 import com.proggroup.areasquarecalculator.R;
+import com.proggroup.areasquarecalculator.data.Constants;
 import com.proggroup.areasquarecalculator.utils.FloatFormatter;
 import com.proggroup.squarecalculations.CalculateUtils;
 
@@ -42,6 +43,8 @@ public class CalculateSquareAreaFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity().getBaseContext(), FileDialog.class);
                 intent.putExtra(FileDialog.START_PATH, Environment.getExternalStorageDirectory()
+                        .getAbsolutePath());
+                intent.putExtra(FileDialog.ROOT_PATH, Constants.BASE_DIRECTORY
                         .getAbsolutePath());
                 intent.putExtra(FileDialog.SELECTION_MODE, SelectionMode.MODE_OPEN);
 

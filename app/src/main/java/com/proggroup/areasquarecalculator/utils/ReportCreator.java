@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.proggroup.areasquarecalculator.InterpolationCalculator;
 import com.proggroup.areasquarecalculator.adapters.CalculatePpmSimpleAdapter;
+import com.proggroup.areasquarecalculator.data.Constants;
 import com.proggroup.areasquarecalculator.data.Project;
 import com.proggroup.areasquarecalculator.db.AvgPointHelper;
 import com.proggroup.areasquarecalculator.db.ProjectHelper;
@@ -33,7 +34,7 @@ public class ReportCreator {
                                     tableName){
         try {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream
-                    (new File(Environment.getExternalStorageDirectory(), tableName + ".csv"))));
+                    (new File(Constants.BASE_DIRECTORY, tableName + ".csv"))));
 
             SQLiteHelper helper = InterpolationCalculator.getInstance().getSqLiteHelper();
             int numRows = adapter.getCount() / numColumns - 1;

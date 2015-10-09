@@ -22,6 +22,7 @@ import com.lamerman.SelectionMode;
 import com.proggroup.areasquarecalculator.InterpolationCalculator;
 import com.proggroup.areasquarecalculator.R;
 import com.proggroup.areasquarecalculator.data.AvgPoint;
+import com.proggroup.areasquarecalculator.data.Constants;
 import com.proggroup.areasquarecalculator.data.Project;
 import com.proggroup.areasquarecalculator.db.AvgPointHelper;
 import com.proggroup.areasquarecalculator.db.PointHelper;
@@ -328,7 +329,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
                         Intent intent = new Intent(fragment.getActivity().getBaseContext(), FileDialog
                                 .class);
-                        intent.putExtra(FileDialog.START_PATH, Environment.getExternalStorageDirectory()
+                        intent.putExtra(FileDialog.START_PATH, Constants.BASE_DIRECTORY
+                                .getAbsolutePath());
+                        intent.putExtra(FileDialog.ROOT_PATH, Constants.BASE_DIRECTORY
                                 .getAbsolutePath());
                         intent.putExtra(FileDialog.SELECTION_MODE, SelectionMode.MODE_OPEN);
 
