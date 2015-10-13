@@ -357,22 +357,23 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
     /**
      * Calculate avg value for row index
      *
-     * @param indexAvg row index
+     * @param rowNumber row index
      */
-    public void calculateAvg(int indexAvg) {
-        for (int i = 0; i < paths.size(); i++) {
-            if (paths.get(indexAvg).get(i) != null) {
-                File f = new File(paths.get(indexAvg).get(i));
+    public void calculateAvg(int rowNumber) {
+        List<String> rowPaths = paths.get(rowNumber);
+        for (int i = 0; i < rowPaths.size(); i++) {
+            if (rowPaths.get(i) != null) {
+                File f = new File(rowPaths.get(i));
                 if (f.exists()) {
                     float val = CalculateUtils.calculateSquare(f);
                     if (val > 0f) {
-                        squareValues.get(indexAvg).set(i, val);
+                        squareValues.get(rowNumber).set(i, val);
                     }
                 }
             }
         }
-        List<Float> values = squareValues.get(indexAvg);
-        avgValues.set(indexAvg, new AvgPoint(remove0List(values)).avg());
+        List<Float> values = squareValues.get(rowNumber);
+        avgValues.set(rowNumber, new AvgPoint(remove0List(values)).avg());
         notifyDataSetChanged();
     }
 
@@ -434,7 +435,6 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         }
 
         paths.get(row).set(column, path);
-        notifyDataSetChanged();
     }
 
     /**
@@ -516,7 +516,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
         @Override
         public void afterTextChanged(Editable s) {
-            paths.get(row).set(column, s.toString());
+            if(s.length() != 0) {
+                paths.get(row).set(column, s.toString());
+            }
         }
 
         @Override
