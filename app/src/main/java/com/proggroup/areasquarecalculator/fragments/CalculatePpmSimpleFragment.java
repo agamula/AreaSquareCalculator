@@ -115,8 +115,8 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 try {
                     List<Float> ppmPoints = new ArrayList<>();
                     List<Float> avgSquarePoints = new ArrayList<>();
-                    ppmPoints.add(0f);
-                    avgSquarePoints.add(0f);
+                    //ppmPoints.add(0f);
+                    //avgSquarePoints.add(0f);
                     ppmPoints.addAll(CalculatePpmSimpleFragment.this.ppmPoints);
                     avgSquarePoints.addAll(CalculatePpmSimpleFragment.this.avgSquarePoints);
                     value = findPpmBySquare(avgValueY, ppmPoints, avgSquarePoints);
@@ -344,8 +344,8 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
             linkedMap.put(helper1.getPpmValue(avgId), avgValues.get(i));
         }
 
-        ppmPoints.add(0f);
-        avgSquarePoints.add(0f);
+        //ppmPoints.add(0f);
+        //avgSquarePoints.add(0f);
 
         for (Map.Entry<Float, Float> entry : linkedMap.entrySet()) {
             ppmPoints.add(entry.getKey());
