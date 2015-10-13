@@ -113,6 +113,12 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 float avgValueY = Float.parseFloat(avgValueLoaded.getText().toString());
                 float value;
                 try {
+                    List<Float> ppmPoints = new ArrayList<>();
+                    List<Float> avgSquarePoints = new ArrayList<>();
+                    ppmPoints.add(0f);
+                    avgSquarePoints.add(0f);
+                    ppmPoints.addAll(CalculatePpmSimpleFragment.this.ppmPoints);
+                    avgSquarePoints.addAll(CalculatePpmSimpleFragment.this.avgSquarePoints);
                     value = findPpmBySquare(avgValueY, ppmPoints, avgSquarePoints);
                 } catch (Exception e) {
                     value = -1;
