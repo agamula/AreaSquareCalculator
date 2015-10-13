@@ -3,7 +3,7 @@
     <dimen name="text_margin_default">5dp</dimen>
     <dimen name="edit_text_size_default">14sp</dimen>
     <dimen name="edit_height_default">60dp</dimen>
-    <dimen name="button_height_default">70dp</dimen>
+    <dimen name="button_height_default">40dp</dimen>
     <dimen name="drawer_width">240dp</dimen>
 
     <dimen name="select_category_height">70dp</dimen>
@@ -13,4 +13,5 @@
     <dimen name="button_text_size_small">11sp</dimen>
     <dimen name="button_height_small">40dp</dimen>
     <dimen name="button_height_extra_small">25dp</dimen>
+    <dimen name="edit_width">250dp</dimen>
 </resources>

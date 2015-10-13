@@ -35,7 +35,6 @@ import com.proggroup.areasquarecalculator.db.SQLiteHelper;
 import com.proggroup.areasquarecalculator.db.SquarePointHelper;
 import com.proggroup.areasquarecalculator.utils.CalculatePpmUtils;
 import com.proggroup.areasquarecalculator.utils.FloatFormatter;
-import com.proggroup.areasquarecalculator.utils.ReportCreator;
 
 import java.io.File;
 import java.io.IOException;

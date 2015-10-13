@@ -24,6 +24,8 @@ import java.util.List;
 
 public class CalculatePpmUtils {
 
+    public static final String CSV_COL_DELiM = ",";
+
     private CalculatePpmUtils() {
     }
 
@@ -41,7 +43,7 @@ public class CalculatePpmUtils {
                     (new File(path)))));
 
             for (String s = reader.readLine(); s != null; s = reader.readLine()) {
-                String splitValues[] = s.split(ReportCreator.CSV_COL_DELiM);
+                String splitValues[] = s.split(CSV_COL_DELiM);
                 ppmValues.add(Float.parseFloat(splitValues[0]));
                 avgSquareValues.add(Float.parseFloat(splitValues[splitValues.length - 1]));
             }
@@ -80,13 +82,13 @@ public class CalculatePpmUtils {
 
             for (int i = 0; i < numRows; i++) {
                 writer.write(FloatFormatter.format(helper1.getPpmValue(avgids.get(i))));
-                writer.write(ReportCreator.CSV_COL_DELiM);
+                writer.write(CSV_COL_DELiM);
                 List<Float> squareVas = squareValues.get(i);
                 for (Float squareVal : squareVas) {
                     if(squareVal != 0f) {
                         writer.write(FloatFormatter.format(squareVal));
                     }
-                    writer.write(ReportCreator.CSV_COL_DELiM);
+                    writer.write(CSV_COL_DELiM);
                 }
                 writer.write(FloatFormatter.format(avgValues.get(i)));
                 writer.newLine();
