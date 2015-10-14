@@ -97,6 +97,13 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
 
         avgPointsLayout = (LinearLayout) view.findViewById(R.id.avg_points);
 
+        avgPointsLayout.removeAllViews();
+        TextView tv = new TextView(getActivity());
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen
+                .edit_text_size_default));
+        tv.setText("");
+        avgPointsLayout.addView(tv);
+
         ppmPoints = new ArrayList<>();
         avgSquarePoints = new ArrayList<>();
 
@@ -225,7 +232,6 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         loadPpmCurve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                avgPointsLayout.removeAllViews();
                 Intent intent = new Intent(getActivity().getBaseContext(), FileDialog
                         .class);
                 intent.putExtra(FileDialog.START_PATH, Constants.BASE_DIRECTORY
@@ -413,7 +419,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                             .save_additional_options_layout, null);
 
                     final EditText editFileName = (EditText) contentView.findViewById(R.id
-                             .edit_file_name);
+                            .edit_file_name);
 
                     builder.setView(contentView);
                     builder.setCancelable(true);
@@ -438,7 +444,6 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
 
                             if (CalculatePpmUtils.saveAvgValuesToFile((CalculatePpmSimpleAdapter) mGridView
                                     .getAdapter(), 6, pathFile.getAbsolutePath())) {
-                                avgPointsLayout.removeAllViews();
                                 fillAvgPointsLayout();
                                 Toast.makeText(getActivity(), "Save success as" + name, Toast.LENGTH_LONG)
                                         .show();

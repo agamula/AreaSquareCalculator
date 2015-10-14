@@ -57,8 +57,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/text_margin_default"
         android:orientation="horizontal"
-        android:visibility="invisible"
-        android:weightSum="2">
+        android:visibility="invisible">
+
+        <Button
+            style="@style/ButtonDefaultStyle"
+            android:layout_width="wrap_content"
+            android:text="@string/load_avgs_from_file"
+            android:visibility="invisible"/>
 
         <TextView
             style="@style/TextViewDefaultStyle"
@@ -92,26 +97,59 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/text_margin_default"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/load_ppm_curve"
+            style="@style/ButtonDefaultStyle"
+            android:layout_width="wrap_content"
+            android:text="@string/load_avgs_from_file"/>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/calculate_ppm_layout_loaded"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left|start">
+            android:layout_marginTop="@dimen/text_margin_default"
+            android:orientation="horizontal"
+            android:visibility="invisible">
+
+            <TextView
+                style="@style/TextViewDefaultStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/enter_avg_square"/>
+
+            <EditText
+                android:id="@+id/avg_value_loaded"
+                style="@style/EditTextDefaultStyle"
+                android:layout_width="@dimen/edit_width"
+                android:digits="0123456789."
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:singleLine="true"/>
 
             <Button
-                android:id="@+id/load_ppm_curve"
+                android:id="@+id/calculate_ppm_loaded"
                 style="@style/ButtonDefaultStyle"
                 android:layout_width="wrap_content"
-                android:text="@string/load_avgs_from_file"/>
+                android:text="@string/calculate_loaded_ppm_simple"/>
+
+            <TextView
+                android:id="@+id/result_ppm_loaded"
+                style="@style/TextViewDefaultStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"/>
         </LinearLayout>
     </LinearLayout>
 
     <HorizontalScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp">
+        android:layout_margin="@dimen/text_margin_default">
 
         <LinearLayout
             android:id="@+id/avg_points"
@@ -119,43 +157,4 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"/>
     </HorizontalScrollView>
-
-    <LinearLayout
-        android:id="@+id/calculate_ppm_layout_loaded"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/text_margin_default"
-        android:orientation="horizontal"
-        android:visibility="invisible"
-        android:weightSum="2">
-
-        <TextView
-            style="@style/TextViewDefaultStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="@string/enter_avg_square"/>
-
-        <EditText
-            android:id="@+id/avg_value_loaded"
-            style="@style/EditTextDefaultStyle"
-            android:layout_width="@dimen/edit_width"
-            android:digits="0123456789."
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:singleLine="true"/>
-
-        <Button
-            android:id="@+id/calculate_ppm_loaded"
-            style="@style/ButtonDefaultStyle"
-            android:layout_width="wrap_content"
-            android:text="@string/calculate_loaded_ppm_simple"/>
-
-        <TextView
-            android:id="@+id/result_ppm_loaded"
-            style="@style/TextViewDefaultStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"/>
-    </LinearLayout>
 </LinearLayout>
