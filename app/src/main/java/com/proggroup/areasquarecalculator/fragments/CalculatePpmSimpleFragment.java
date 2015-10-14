@@ -407,9 +407,9 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                     Calendar calendar = Calendar.getInstance();
 
                     final String timeName = "CAL_" + formatAddLeadingZero(calendar.get(Calendar
-                            .DAY_OF_MONTH)) + formatAddLeadingZero(calendar.get
-                            (Calendar.MONTH)) + formatAddLeadingZero(calendar.get(Calendar.YEAR))
-                            + "_" + formatAddLeadingZero(calendar.get
+                            .YEAR)) + formatAddLeadingZero(calendar.get
+                            (Calendar.MONTH)) + formatAddLeadingZero(calendar.get(Calendar
+                            .DAY_OF_MONTH)) + "_" + formatAddLeadingZero(calendar.get
                             (Calendar.HOUR_OF_DAY)) + formatAddLeadingZero(calendar.get(Calendar
                             .MINUTE)) + formatAddLeadingZero(calendar.get(Calendar.SECOND));
 
