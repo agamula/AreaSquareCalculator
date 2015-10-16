@@ -1,25 +1,26 @@
 package com.proggroup.areasquarecalculator.fragments;
 
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.proggroup.areasquarecalculator.R;
 import com.proggroup.areasquarecalculator.utils.FloatFormatter;
@@ -76,6 +77,115 @@ public class CurveFragment extends Fragment implements OnChartValueSelectedListe
         }
 
         initLine();
+        initGrid();
+    }
+
+    private void initGrid() {
+        mDisplayGrid.setAdapter(new BaseAdapter() {
+
+            static final int header_top = 0;
+            static final int text_number = 2;
+            static final int text_ppm = 3;
+            static final int text_value = 4;
+
+            @Override
+            public int getCount() {
+                return (squares.size() + 1) * 3;
+            }
+
+            @Override
+            public Object getItem(int position) {
+                return null;
+            }
+
+            @Override
+            public long getItemId(int position) {
+                if (position < 3) {
+                    return header_top;
+                }
+                switch (position % 3) {
+                    case 0:
+                        return text_number;
+                    case 1:
+                        return text_ppm;
+                    case 2:
+                        return text_value;
+                    default:
+                        return header_top;
+                }
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                int itemId = (int) getItemId(position);
+
+                if (convertView == null) {
+                    convertView = inflateView(itemId, parent);
+                } else {
+                    int tag = (int) convertView.getTag();
+                    if (tag == header_top) {
+                        if (itemId != tag) {
+                            convertView = inflateView(itemId, parent);
+                        }
+                    } else if (itemId == header_top) {
+                        convertView = inflateView(itemId, parent);
+                    }
+                }
+                convertView.setTag(itemId);
+
+                TextView textView = (TextView) convertView.findViewById(R.id.edit);
+
+                if(itemId != header_top) {
+                    textView.setEnabled(false);
+                    textView.setGravity(Gravity.CENTER);
+                    if(itemId == text_number) {
+                        ((View)textView.getParent()).setBackgroundColor(getResources().getColor(R
+                                .color.edit_disabled));
+                        textView.setTextColor(Color.WHITE);
+                    } else {
+                        textView.setTextColor(getResources().getColor(R.color.color_text));
+                        ((View)textView.getParent()).setBackgroundColor(getResources().getColor(R
+                                .color.grid_item_bkg_color));
+                    }
+                } else {
+                    convertView.findViewById(R.id.header_name).setBackgroundColor(getResources()
+                            .getColor(R
+                                    .color.edit_disabled));
+                }
+
+                switch (itemId) {
+                    case header_top:
+                        ((TextView)convertView.findViewById(R.id.header_name)).setText
+                                (getResources().getStringArray(R.array.head1)[position]);
+                        break;
+                    case text_number:
+                        textView.setText(position / 3 + "");
+                        break;
+                    case text_ppm:
+                        textView.setText(squares.keyAt(position / 3 - 1) + "");
+                        break;
+                    case text_value:
+                        textView.setText(FloatFormatter.format(squares.valueAt(position / 3 - 1)));
+                        break;
+                }
+
+                return convertView;
+            }
+
+            private View inflateView(int itemId, ViewGroup parent) {
+                View convertView;
+                switch (itemId) {
+                    case header_top:
+                        convertView = LayoutInflater.from(getActivity()).inflate(R.layout
+                                .layout_table_header, parent, false);
+                        break;
+                    default:
+                        convertView = LayoutInflater.from(getActivity()).inflate(R.layout
+                                .layout_table_edit_text, parent, false);
+                }
+                return convertView;
+            }
+        });
     }
 
     private void initLine() {

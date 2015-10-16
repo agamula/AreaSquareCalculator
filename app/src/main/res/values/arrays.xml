@@ -8,4 +8,10 @@
         <item>@string/fourth_test</item>
         <item>@string/avg_data_result</item>
     </string-array>
+
+    <string-array name="head1">
+        <item>№</item>
+        <item>Ppm</item>
+        <item>Square</item>
+    </string-array>
 </resources>

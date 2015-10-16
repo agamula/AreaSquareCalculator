@@ -4,11 +4,9 @@
               android:layout_height="match_parent"
               android:background="@color/app_background">
 
-    <GridView
-        android:id="@+id/display_values"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"/>
+    <com.proggroup.areasquarecalculator.views.SquareLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,4 +20,15 @@
                 android:paddingEnd="30dp"
                 android:paddingRight="30dp"/>
         </LinearLayout>
+    </com.proggroup.areasquarecalculator.views.SquareLayout>
+
+    <GridView
+        android:id="@+id/display_values"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:numColumns="3"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="15dp"/>
+
 </LinearLayout>
