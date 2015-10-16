@@ -76,6 +76,10 @@ public class CurveFragment extends Fragment implements OnChartValueSelectedListe
                     (i)));
         }
 
+        if(squares.indexOfKey(0) == -1) {
+            squares.put(0, 0f);
+        }
+
         initLine();
         initGrid();
     }
@@ -141,16 +145,19 @@ public class CurveFragment extends Fragment implements OnChartValueSelectedListe
                     if(itemId == text_number) {
                         ((View)textView.getParent()).setBackgroundColor(getResources().getColor(R
                                 .color.edit_disabled));
-                        textView.setTextColor(Color.WHITE);
+                        textView.setTextColor(Color.BLACK);
                     } else {
                         textView.setTextColor(getResources().getColor(R.color.color_text));
                         ((View)textView.getParent()).setBackgroundColor(getResources().getColor(R
                                 .color.grid_item_bkg_color));
                     }
                 } else {
-                    convertView.findViewById(R.id.header_name).setBackgroundColor(getResources()
+                    TextView tv =
+                            (TextView) convertView.findViewById(R.id.header_name);
+                    tv.setBackgroundColor(getResources()
                             .getColor(R
                                     .color.edit_disabled));
+                    tv.setTextColor(Color.BLACK);
                 }
 
                 switch (itemId) {
@@ -190,7 +197,7 @@ public class CurveFragment extends Fragment implements OnChartValueSelectedListe
 
     private void initLine() {
         mLineChart.setOnChartValueSelectedListener(this);
-        mLineChart.setExtraOffsets(60, 60, 60, 60);
+        mLineChart.setExtraOffsets(40, 50, 50, 0);
         mLineChart.setDrawGridBackground(false);
         mLineChart.setDoubleTapToZoomEnabled(false);
 

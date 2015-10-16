@@ -11,7 +11,7 @@
 
     <string-array name="head1">
         <item>№</item>
-        <item>Ppm</item>
+        <item>ppm</item>
         <item>Square</item>
     </string-array>
 </resources>
