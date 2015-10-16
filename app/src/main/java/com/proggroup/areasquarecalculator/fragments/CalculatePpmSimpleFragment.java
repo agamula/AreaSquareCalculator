@@ -24,6 +24,7 @@ import com.lamerman.FileDialog;
 import com.lamerman.SelectionMode;
 import com.proggroup.areasquarecalculator.InterpolationCalculator;
 import com.proggroup.areasquarecalculator.R;
+import com.proggroup.areasquarecalculator.activities.IActivityCallback;
 import com.proggroup.areasquarecalculator.adapters.CalculatePpmSimpleAdapter;
 import com.proggroup.areasquarecalculator.data.Constants;
 import com.proggroup.areasquarecalculator.data.PrefConstants;
@@ -63,6 +64,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     private CalculatePpmSimpleAdapter adapter;
 
     private View calculatePpmSimple, calculatePpmSimpleLoaded;
+    private View graph;
     private Button btnAddRow;
     private View buttonsLayout;
     private View loadPpmCurve, savePpmCurve;
@@ -84,6 +86,34 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mGridView = (GridView) view.findViewById(R.id.grid);
+
+        graph = view.findViewById(R.id.graph);
+
+        graph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity activity = getActivity();
+                IActivityCallback callback = activity instanceof IActivityCallback ? (IActivityCallback)
+                        activity : null;
+
+                List<Float> ppmPoints = new ArrayList<>();
+                List<Float> avgSquarePoints = new ArrayList<>();
+                fillPpmAndSquaresFromDatabase(ppmPoints, avgSquarePoints);
+
+                ArrayList<String> ppmStrings = new ArrayList<>(ppmPoints.size());
+                ArrayList<String> squareStrings = new ArrayList<>(avgSquarePoints.size());
+
+                for (Float ppm : ppmPoints) {
+                    ppmStrings.add(ppm.intValue() + "");
+                }
+                for (Float square : avgSquarePoints) {
+                    squareStrings.add(FloatFormatter.format(square));
+                }
+
+                callback.startFragmentToDefaultContainer(CurveFragment.newInstance(ppmStrings,
+                                 squareStrings), true);
+            }
+        });
 
         calculatePpmLayout = view.findViewById(R.id.calculate_ppm_layout);
 

@@ -50,6 +50,13 @@
 
             android:layout_width="wrap_content"
             android:text="@string/save_avgs_from_file"/>
+
+        <Button
+            android:id="@+id/graph"
+            style="@style/ButtonDefaultStyle"
+
+            android:layout_width="wrap_content"
+            android:text="Graph"/>
     </LinearLayout>
 
     <LinearLayout
