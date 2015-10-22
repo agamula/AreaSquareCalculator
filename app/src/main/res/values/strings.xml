@@ -33,6 +33,7 @@
     <string name="fourth_test">4-th test</string>
     <string name="avg_data_recalculate">Avg calculate</string>
     <string name="avg_data_result">Avg values</string>
+    <string name="delete">Delete</string>
     <string name="avg_item_calculate">Calc</string>
     <string name="csv">Csv</string>
     <string name="input_ppm_first">Input ppm first</string>

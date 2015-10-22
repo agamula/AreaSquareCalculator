@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -453,6 +454,8 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                     final EditText editFileName = (EditText) contentView.findViewById(R.id
                             .edit_file_name);
 
+                    final CheckBox save0ppm = (CheckBox) contentView.findViewById(R.id.save_0_ppm);
+
                     builder.setView(contentView);
                     builder.setCancelable(true);
 
@@ -475,10 +478,10 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                             }
 
                             if (CalculatePpmUtils.saveAvgValuesToFile((CalculatePpmSimpleAdapter) mGridView
-                                    .getAdapter(), 6, pathFile.getAbsolutePath())) {
+                                    .getAdapter(), 6, pathFile.getAbsolutePath(), save0ppm.isChecked())) {
                                 fillAvgPointsLayout();
-                                Toast.makeText(getActivity(), "Save success as" + name, Toast.LENGTH_LONG)
-                                        .show();
+                                Toast.makeText(getActivity(), "Save success as " + name, Toast
+                                        .LENGTH_LONG).show();
                             }
 
                             dialog.dismiss();

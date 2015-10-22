@@ -7,6 +7,7 @@
         <item>@string/third_test</item>
         <item>@string/fourth_test</item>
         <item>@string/avg_data_result</item>
+        <item>@string/delete</item>
     </string-array>
 
     <string-array name="head1">

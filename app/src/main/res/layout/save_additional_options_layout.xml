@@ -2,8 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/app_background"
               android:orientation="vertical"
-    >
+              android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white">
+
+            <CheckBox
+                android:id="@+id/save_0_ppm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <TextView
+            style="@style/TextViewDefaultStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Use (0,0) point"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,5 +53,6 @@
         android:id="@+id/save_curve"
         style="@style/ButtonDefaultStyle"
         android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:text="@string/apply_name"/>
 </LinearLayout>

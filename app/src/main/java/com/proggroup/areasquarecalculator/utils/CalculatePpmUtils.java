@@ -65,7 +65,7 @@ public class CalculatePpmUtils {
      * @return Result: true - for success, false - for fail.
      */
     public static boolean saveAvgValuesToFile(CalculatePpmSimpleAdapter adapter, int numColumns, String
-            path) {
+            path, boolean save0Ppm) {
         try {
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream
                     (path)));
@@ -80,8 +80,17 @@ public class CalculatePpmUtils {
             List<List<Float>> squareValues = adapter.getSquareValues();
             List<Float> avgValues = adapter.getAvgValues();
 
+            if(save0Ppm) {
+                writer.write("0");
+                writer.write(CSV_COL_DELiM);
+                writer.write("0");
+                writer.write(CSV_COL_DELiM);
+                writer.write("0");
+                writer.newLine();
+            }
+
             for (int i = 0; i < numRows; i++) {
-                writer.write(FloatFormatter.format(helper1.getPpmValue(avgids.get(i))));
+                writer.write((int)helper1.getPpmValue(avgids.get(i)) + "");
                 writer.write(CSV_COL_DELiM);
                 List<Float> squareVas = squareValues.get(i);
                 for (Float squareVal : squareVas) {

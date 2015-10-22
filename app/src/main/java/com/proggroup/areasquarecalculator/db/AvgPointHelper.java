@@ -78,9 +78,6 @@ public class AvgPointHelper {
     }
 
     public void deleteAvgPoint(long avgPointId) {
-        if(project.isSimpleMeasure()) {
-            return;
-        }
         SquarePointHelper squarePointHelper = new SquarePointHelper(writeDb);
         List<Long> squarePointIds = squarePointHelper.getSquarePointIds(avgPointId);
         for (Long squarePointId : squarePointIds) {

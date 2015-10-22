@@ -65,6 +65,8 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
      */
     public static final int ITEM_ID_KNOWN_PPM = 4;
 
+    public static final int ITEM_ID_DELETE_ROW = 5;
+
     private SquarePointHelper squarePointHelper;
     private AvgPointHelper avgPointHelper;
     private List<Long> avgPointIds;
@@ -173,7 +175,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         return (avgValues.size() + 1) * (Project
-                .TABLE_MAX_COLS_COUNT + 2);
+                .TABLE_MAX_COLS_COUNT + 3);
     }
 
     @Override
@@ -183,13 +185,16 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        if (position < Project.TABLE_MAX_COLS_COUNT + 2) {
+        if (position < Project.TABLE_MAX_COLS_COUNT + 3) {
             return ITEM_ID_HEADER;
-        } else if (position % (Project.TABLE_MAX_COLS_COUNT + 2) == Project
+        } else if (position % (Project.TABLE_MAX_COLS_COUNT + 3) == Project
                 .TABLE_MAX_COLS_COUNT + 1) {
             return ITEM_ID_CALC_AVG_RESULT;
-        } else if (position % (Project.TABLE_MAX_COLS_COUNT + 2) == 0) {
+        } else if (position % (Project.TABLE_MAX_COLS_COUNT + 3) == 0) {
             return ITEM_ID_KNOWN_PPM;
+        } else if(position % (Project.TABLE_MAX_COLS_COUNT + 3) == Project
+                .TABLE_MAX_COLS_COUNT + 2) {
+            return ITEM_ID_DELETE_ROW;
         } else {
             return ITEM_ID_DATA;
         }
@@ -217,6 +222,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 case ITEM_ID_DATA:
                     convertView = inflater.inflate(R.layout.layout_table_item, parent, false);
                     break;
+                case ITEM_ID_DELETE_ROW:
+                    convertView = inflater.inflate(R.layout.layout_table_delete, parent, false);
+                    break;
                 default:
                     convertView = inflater.inflate(R.layout.layout_table_header, parent, false);
             }
@@ -230,7 +238,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                         .getResources().getStringArray(R.array.headers)[position]);
                 break;
             case ITEM_ID_KNOWN_PPM:
-                final int index = position / (Project.TABLE_MAX_COLS_COUNT + 2) - 1;
+                final int index = position / (Project.TABLE_MAX_COLS_COUNT + 3) - 1;
 
                 EditText ppmText = (EditText) convertView.findViewById(R.id.edit);
                 ppmText.setGravity(Gravity.NO_GRAVITY);
@@ -260,7 +268,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 }
                 break;
             case ITEM_ID_CALC_AVG_RESULT:
-                int index1 = position / (Project.TABLE_MAX_COLS_COUNT + 2) - 1;
+                int index1 = position / (Project.TABLE_MAX_COLS_COUNT + 3) - 1;
 
                 ppmText = (EditText) convertView.findViewById(R.id.edit);
                 ppmText.setTextColor(Color.BLACK);
@@ -283,9 +291,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 }
                 break;
             case ITEM_ID_DATA:
-                index1 = position / (Project.TABLE_MAX_COLS_COUNT + 2) - 1;
+                index1 = position / (Project.TABLE_MAX_COLS_COUNT + 3) - 1;
 
-                int pointNumber = position % (Project.TABLE_MAX_COLS_COUNT + 2) - 1;
+                int pointNumber = position % (Project.TABLE_MAX_COLS_COUNT + 3) - 1;
 
                 TextView squareVal = (TextView) convertView.findViewById(R.id.square_value);
                 TextView path = (TextView) convertView.findViewById(R.id.csv_path);
@@ -356,6 +364,20 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                     csvView.setTag(pathTag);
                 }
 
+                break;
+            case ITEM_ID_DELETE_ROW:
+                convertView.findViewById(R.id.delete_row).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int index1 = position / (Project.TABLE_MAX_COLS_COUNT + 3) - 1;
+                        avgPointHelper.deleteAvgPoint(avgPointIds.get(index1));
+                        avgPointIds.remove(index1);
+                        squareValues.remove(index1);
+                        paths.remove(index1);
+                        avgValues.remove(index1);
+                        notifyDataSetChanged();
+                    }
+                });
                 break;
         }
 
