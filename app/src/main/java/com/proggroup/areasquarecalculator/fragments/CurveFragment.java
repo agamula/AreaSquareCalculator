@@ -145,9 +145,7 @@ public class CurveFragment extends Fragment implements OnChartValueSelectedListe
                     if(itemId == text_number) {
                         ((View)textView.getParent()).setBackgroundColor(getResources().getColor(R
                                 .color.edit_disabled));
-                        textView.setTextColor(Color.BLACK);
                     } else {
-                        textView.setTextColor(getResources().getColor(R.color.color_text));
                         ((View)textView.getParent()).setBackgroundColor(getResources().getColor(R
                                 .color.grid_item_bkg_color));
                     }
@@ -157,7 +155,6 @@ public class CurveFragment extends Fragment implements OnChartValueSelectedListe
                     tv.setBackgroundColor(getResources()
                             .getColor(R
                                     .color.edit_disabled));
-                    tv.setTextColor(Color.BLACK);
                 }
 
                 switch (itemId) {

@@ -8,8 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:layout_weight="1">
 
         <GridView
             android:id="@+id/grid"
@@ -80,14 +80,20 @@
             android:layout_gravity="center_vertical"
             android:text="@string/enter_avg_square"/>
 
-        <EditText
-            android:id="@+id/avg_value"
-            style="@style/EditTextDefaultStyle"
+        <LinearLayout
             android:layout_width="@dimen/edit_width"
-            android:digits="0123456789."
-            android:imeOptions="actionDone"
-            android:inputType="number"
-            android:singleLine="true"/>
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_background">
+
+            <EditText
+                android:id="@+id/avg_value"
+                style="@style/EditTextDefaultStyle"
+                android:layout_width="match_parent"
+                android:digits="0123456789."
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:singleLine="true"/>
+        </LinearLayout>
 
         <Button
             android:id="@+id/calculate_ppm"
@@ -130,14 +136,20 @@
                 android:layout_gravity="center_vertical"
                 android:text="@string/enter_avg_square"/>
 
-            <EditText
-                android:id="@+id/avg_value_loaded"
-                style="@style/EditTextDefaultStyle"
+            <LinearLayout
                 android:layout_width="@dimen/edit_width"
-                android:digits="0123456789."
-                android:imeOptions="actionDone"
-                android:inputType="number"
-                android:singleLine="true"/>
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_background">
+
+                <EditText
+                    android:id="@+id/avg_value_loaded"
+                    style="@style/EditTextDefaultStyle"
+                    android:layout_width="match_parent"
+                    android:digits="0123456789."
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:singleLine="true"/>
+            </LinearLayout>
 
             <Button
                 android:id="@+id/calculate_ppm_loaded"

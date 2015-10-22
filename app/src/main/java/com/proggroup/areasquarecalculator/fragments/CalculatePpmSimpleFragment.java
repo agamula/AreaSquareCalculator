@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -132,6 +133,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen
                 .edit_text_size_default));
         tv.setText("");
+        tv.setTextColor(Color.WHITE);
         avgPointsLayout.addView(tv);
 
         ppmPoints = new ArrayList<>();
@@ -509,6 +511,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                     .edit_text_size_default));
             tv.setText(FloatFormatter.format(ppmPoints.get(i)) + " " + FloatFormatter.format
                     (avgSquarePoints.get(i)) + "    ");
+            tv.setTextColor(Color.WHITE);
 
             avgPointsLayout.addView(tv);
         }

@@ -3,12 +3,14 @@ package com.proggroup.areasquarecalculator.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -231,6 +233,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 final int index = position / (Project.TABLE_MAX_COLS_COUNT + 2) - 1;
 
                 EditText ppmText = (EditText) convertView.findViewById(R.id.edit);
+                ppmText.setGravity(Gravity.NO_GRAVITY);
 
                 if (ppmText.getTag() != null) {
                     ppmText.removeTextChangedListener(new PpmWatcher((Integer) ppmText.getTag()));
@@ -260,6 +263,8 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 int index1 = position / (Project.TABLE_MAX_COLS_COUNT + 2) - 1;
 
                 ppmText = (EditText) convertView.findViewById(R.id.edit);
+                ppmText.setTextColor(Color.BLACK);
+                ppmText.setGravity(Gravity.CENTER);
 
                 List<Float> squares = squareValues.get(index1);
                 boolean itemsInited = false;
