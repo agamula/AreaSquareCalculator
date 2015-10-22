@@ -7,11 +7,13 @@ import android.graphics.PointF;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -204,7 +206,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                     convertView = inflater.inflate(R.layout.layout_table_header, parent, false);
                     break;
                 case ITEM_ID_KNOWN_PPM:
-                    convertView = inflater.inflate(R.layout.layout_table_edit_text, parent, false);
+                    convertView = inflater.inflate(R.layout.layout_table_ppm_edit, parent, false);
                     break;
                 case ITEM_ID_CALC_AVG_RESULT:
                     convertView = inflater.inflate(R.layout.layout_table_edit_text, parent, false);
@@ -229,6 +231,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 final int index = position / (Project.TABLE_MAX_COLS_COUNT + 2) - 1;
 
                 EditText ppmText = (EditText) convertView.findViewById(R.id.edit);
+
                 if (ppmText.getTag() != null) {
                     ppmText.removeTextChangedListener(new PpmWatcher((Integer) ppmText.getTag()));
                 }
@@ -250,7 +253,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
                 float ppmValue = avgPointHelper.getPpmValue(avgPointIds.get(index));
                 if (ppmValue != 0 && index != ppmIndex) {
-                    ppmText.setText(FloatFormatter.format(ppmValue));
+                    ppmText.setText((int)ppmValue + "");
                 }
                 break;
             case ITEM_ID_CALC_AVG_RESULT:
@@ -478,7 +481,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         public void afterTextChanged(Editable s) {
             long avgPointId = avgPointIds.get(index);
             if (!s.toString().isEmpty()) {
-                avgPointHelper.updatePpm(avgPointId, Float.parseFloat(s.toString()));
+                avgPointHelper.updatePpm(avgPointId, Integer.parseInt(s.toString()));
             } else {
                 avgPointHelper.updatePpm(avgPointId, 0);
             }
