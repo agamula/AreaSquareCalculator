@@ -76,10 +76,6 @@ public class CurveFragment extends Fragment implements OnChartValueSelectedListe
                     (i)));
         }
 
-        if(squares.indexOfKey(0) == -1) {
-            squares.put(0, 0f);
-        }
-
         initLine();
         initGrid();
     }
@@ -291,6 +287,12 @@ public class CurveFragment extends Fragment implements OnChartValueSelectedListe
 
         xVals.add(xMax + "");
         indexes.add(xVals.size() - 1);
+
+        for (int i = 0, k = 0; i < xVals.size(); i++) {
+            if(!xVals.get(i).isEmpty()) {
+                xVals.set(i, squares.keyAt(k++) + "");
+            }
+        }
 
         ArrayList<Entry> yVals = new ArrayList<Entry>();
 

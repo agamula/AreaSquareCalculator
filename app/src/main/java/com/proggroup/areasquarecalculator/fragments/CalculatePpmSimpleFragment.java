@@ -66,7 +66,8 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
     private CalculatePpmSimpleAdapter adapter;
 
     private View calculatePpmSimple, calculatePpmSimpleLoaded;
-    private View graph;
+    private View graph, graph1;
+    private CheckBox connect0;
     private Button btnAddRow;
     private View buttonsLayout;
     private View loadPpmCurve, savePpmCurve;
@@ -105,6 +106,11 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 ArrayList<String> ppmStrings = new ArrayList<>(ppmPoints.size());
                 ArrayList<String> squareStrings = new ArrayList<>(avgSquarePoints.size());
 
+                if(connect0.isChecked()) {
+                    ppmPoints.add(0, 0f);
+                    avgSquarePoints.add(0, 0f);
+                }
+
                 for (Float ppm : ppmPoints) {
                     ppmStrings.add(ppm.intValue() + "");
                 }
@@ -116,6 +122,37 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                                  squareStrings), true);
             }
         });
+
+        graph1 = view.findViewById(R.id.graph1);
+
+        graph1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Activity activity = getActivity();
+                IActivityCallback callback = activity instanceof IActivityCallback ? (IActivityCallback)
+                        activity : null;
+
+                List<Float> ppmPoints = new ArrayList<>();
+                List<Float> avgSquarePoints = new ArrayList<>();
+                ppmPoints.addAll(CalculatePpmSimpleFragment.this.ppmPoints);
+                avgSquarePoints.addAll(CalculatePpmSimpleFragment.this.avgSquarePoints);
+
+                ArrayList<String> ppmStrings = new ArrayList<>(ppmPoints.size());
+                ArrayList<String> squareStrings = new ArrayList<>(avgSquarePoints.size());
+
+                for (Float ppm : ppmPoints) {
+                    ppmStrings.add(ppm.intValue() + "");
+                }
+                for (Float square : avgSquarePoints) {
+                    squareStrings.add(FloatFormatter.format(square));
+                }
+
+                callback.startFragmentToDefaultContainer(CurveFragment.newInstance(ppmStrings,
+                        squareStrings), true);
+            }
+        });
+
+        connect0 = (CheckBox) view.findViewById(R.id.save_0_ppm);
 
         calculatePpmLayout = view.findViewById(R.id.calculate_ppm_layout);
 
@@ -431,6 +468,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                     avgSquarePoints.clear();
                     avgSquarePoints.addAll(res.second);
                     fillAvgPointsLayout();
+                    graph1.setVisibility(View.VISIBLE);
                     break;
                 case SAVE_PPM_AVG_VALUES:
                     ppmPoints.clear();
@@ -454,8 +492,6 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                     final EditText editFileName = (EditText) contentView.findViewById(R.id
                             .edit_file_name);
 
-                    final CheckBox save0ppm = (CheckBox) contentView.findViewById(R.id.save_0_ppm);
-
                     builder.setView(contentView);
                     builder.setCancelable(true);
 
@@ -478,7 +514,8 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                             }
 
                             if (CalculatePpmUtils.saveAvgValuesToFile((CalculatePpmSimpleAdapter) mGridView
-                                    .getAdapter(), 6, pathFile.getAbsolutePath(), save0ppm.isChecked())) {
+                                    .getAdapter(), 6, pathFile.getAbsolutePath(), connect0.isChecked()
+                            )) {
                                 fillAvgPointsLayout();
                                 Toast.makeText(getActivity(), "Save success as " + name, Toast
                                         .LENGTH_LONG).show();

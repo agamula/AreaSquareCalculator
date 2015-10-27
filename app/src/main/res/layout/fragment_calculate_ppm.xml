@@ -140,6 +140,20 @@
             </HorizontalScrollView>
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/text_margin_default">
+
+                <Button
+                    android:id="@+id/graph1"
+                    style="@style/ButtonDefaultStyle"
+
+                    android:layout_width="wrap_content"
+                    android:text="Graph"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/calculate_ppm_layout_loaded"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
