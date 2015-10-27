@@ -82,8 +82,9 @@
 
         <LinearLayout
             android:layout_width="@dimen/edit_width"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edit_background">
+            android:layout_height="@dimen/button_height_default"
+            android:background="@drawable/edit_background"
+            android:layout_gravity="center_vertical">
 
             <EditText
                 android:id="@+id/avg_value"
@@ -92,7 +93,8 @@
                 android:digits="0123456789."
                 android:imeOptions="actionDone"
                 android:inputType="number"
-                android:singleLine="true"/>
+                android:singleLine="true"
+                android:layout_height="@dimen/button_height_default"/>
         </LinearLayout>
 
         <Button
@@ -138,7 +140,8 @@
 
             <LinearLayout
                 android:layout_width="@dimen/edit_width"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/button_height_default"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/edit_background">
 
                 <EditText
@@ -148,7 +151,8 @@
                     android:digits="0123456789."
                     android:imeOptions="actionDone"
                     android:inputType="number"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:layout_height="@dimen/button_height_default"/>
             </LinearLayout>
 
             <Button

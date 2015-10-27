@@ -8,7 +8,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/ab_background"
+        android:background="@color/grid_item_bkg_color"
         android:minHeight="?attr/actionBarSize" />
 
     <android.support.v4.widget.DrawerLayout

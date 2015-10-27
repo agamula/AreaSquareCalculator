@@ -9,5 +9,6 @@
         android:layout_height="@dimen/select_category_height"
         android:gravity="center"
         android:id="@+id/select_category_text"
-        style="@style/TextViewDefaultStyle"/>
+        style="@style/TextViewDefaultStyle"
+        android:textColor="@android:color/black"/>
 </LinearLayout>
