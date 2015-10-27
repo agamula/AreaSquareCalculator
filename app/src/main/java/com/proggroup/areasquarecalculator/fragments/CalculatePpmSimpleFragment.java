@@ -173,6 +173,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
         tv.setText("");
         tv.setTextColor(Color.WHITE);
         avgPointsLayout.addView(tv);
+        graph1.setVisibility(View.GONE);
 
         ppmPoints = new ArrayList<>();
         avgSquarePoints = new ArrayList<>();
