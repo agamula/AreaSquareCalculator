@@ -28,12 +28,33 @@
         android:id="@+id/buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:visibility="invisible">
 
+        <Button
+            android:id="@+id/simple_ppm_btn_reset"
+            style="@style/ButtonDefaultStyle"
+            android:layout_width="wrap_content"
+
+            android:text="Reset"/>
+
+        <Button
+            android:id="@+id/simple_ppm_btn_addRow"
+            style="@style/ButtonDefaultStyle"
+
+            android:layout_width="wrap_content"
+            android:text="Add row"/>
+
+        <Button
+            android:id="@+id/save_ppm_curve"
+            style="@style/ButtonDefaultStyle"
+
+            android:layout_width="wrap_content"
+            android:text="@string/save_avgs_from_file"/>
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -53,38 +74,12 @@
                 android:text="Use (0,0) point"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/graph"
+            style="@style/ButtonDefaultStyle"
 
-            <Button
-                android:id="@+id/simple_ppm_btn_reset"
-                style="@style/ButtonDefaultStyle"
-                android:layout_width="wrap_content"
-
-                android:text="Reset"/>
-
-            <Button
-                android:id="@+id/simple_ppm_btn_addRow"
-                style="@style/ButtonDefaultStyle"
-
-                android:layout_width="wrap_content"
-                android:text="Add row"/>
-
-            <Button
-                android:id="@+id/save_ppm_curve"
-                style="@style/ButtonDefaultStyle"
-
-                android:layout_width="wrap_content"
-                android:text="@string/save_avgs_from_file"/>
-
-            <Button
-                android:id="@+id/graph"
-                style="@style/ButtonDefaultStyle"
-
-                android:layout_width="wrap_content"
-                android:text="Graph"/>
-        </LinearLayout>
+            android:layout_width="wrap_content"
+            android:text="Graph"/>
     </LinearLayout>
 
     <LinearLayout

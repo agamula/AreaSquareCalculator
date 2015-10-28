@@ -138,6 +138,7 @@ public class CurveFragment extends Fragment implements OnChartValueSelectedListe
                 if(itemId != header_top) {
                     textView.setEnabled(false);
                     textView.setGravity(Gravity.CENTER);
+                    textView.setTextColor(Color.BLACK);
                     if(itemId == text_number) {
                         ((View)textView.getParent()).setBackgroundColor(getResources().getColor(R
                                 .color.edit_disabled));
@@ -219,6 +220,7 @@ public class CurveFragment extends Fragment implements OnChartValueSelectedListe
         XAxis xAxis = mLineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
+        xAxis.setTextSize(12f);
         xAxis.setLabelsToSkip(0);
 
         setData();
@@ -307,7 +309,7 @@ public class CurveFragment extends Fragment implements OnChartValueSelectedListe
         set1.setLineWidth(2f);
         set1.setCircleSize(4f);
         set1.setDrawCircleHole(false);
-        set1.setValueTextSize(13f);
+        set1.setValueTextSize(12f);
         set1.setFillAlpha(65);
         set1.setFillColor(Color.BLACK);
         set1.setDrawFilled(true);
