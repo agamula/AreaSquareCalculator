@@ -131,6 +131,10 @@ public class CurveFragment extends Fragment implements OnChartValueSelectedListe
                         convertView = inflateView(itemId, parent);
                     }
                 }
+                convertView.getLayoutParams().height = (int)convertView.getResources()
+                        .getDimension(R
+                        .dimen.grid_view_curve_height);
+
                 convertView.setTag(itemId);
 
                 TextView textView = (TextView) convertView.findViewById(R.id.edit);
