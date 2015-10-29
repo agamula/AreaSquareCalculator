@@ -14,6 +14,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -106,7 +107,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 ArrayList<String> ppmStrings = new ArrayList<>(ppmPoints.size());
                 ArrayList<String> squareStrings = new ArrayList<>(avgSquarePoints.size());
 
-                if(connect0.isChecked()) {
+                if (connect0.isChecked()) {
                     ppmPoints.add(0, 0f);
                     avgSquarePoints.add(0, 0f);
                 }
@@ -119,7 +120,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 }
 
                 callback.startFragmentToDefaultContainer(CurveFragment.newInstance(ppmStrings,
-                                 squareStrings), true);
+                        squareStrings), true);
             }
         });
 
@@ -261,6 +262,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 initLayouts();
 
                 mGridView.setAdapter(adapter);
+                mGridView.setOnScrollListener(new MyScrollListener());
             }
         });
 
@@ -284,6 +286,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 mPointHelper, avgPointIds);
 
         mGridView.setAdapter(adapter);
+        mGridView.setOnScrollListener(new MyScrollListener());
 
         btnAddRow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -515,7 +518,7 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                             }
 
                             if (CalculatePpmUtils.saveAvgValuesToFile((CalculatePpmSimpleAdapter) mGridView
-                                    .getAdapter(), 6, pathFile.getAbsolutePath(), connect0.isChecked()
+                                            .getAdapter(), 6, pathFile.getAbsolutePath(), connect0.isChecked()
                             )) {
                                 fillAvgPointsLayout();
                                 Toast.makeText(getActivity(), "Save success as " + name, Toast
@@ -557,6 +560,28 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
             avgPointsLayout.addView(tv);
         }
         calculatePpmLayoutLoaded.setVisibility(View.VISIBLE);
+    }
+
+    protected class MyScrollListener implements AbsListView.OnScrollListener {
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem,
+                             int visibleItemCount, int totalItemCount) {
+            // do nothing
+        }
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            if (SCROLL_STATE_TOUCH_SCROLL == scrollState) {
+                if (getActivity() != null) {
+                    View currentFocus = getActivity().getCurrentFocus();
+                    if (currentFocus != null) {
+                        currentFocus.clearFocus();
+                    }
+                }
+            }
+        }
+
     }
 
     @Override
