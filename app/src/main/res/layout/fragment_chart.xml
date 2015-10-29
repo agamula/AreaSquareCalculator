@@ -30,7 +30,15 @@
         android:layout_margin="@dimen/text_margin_default"
         android:layout_marginLeft="15dp"
         android:layout_weight="1"
-        android:background="@color/edit_disabled">
+        android:background="@color/edit_disabled"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/grid_view_curve_height"
+            android:id="@+id/above_layout"
+            android:background="@color/grid_item_bkg_color"
+            android:orientation="horizontal" />
 
         <GridView
             android:id="@+id/display_values"
