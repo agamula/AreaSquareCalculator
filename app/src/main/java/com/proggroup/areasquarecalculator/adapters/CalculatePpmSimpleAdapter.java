@@ -297,18 +297,18 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
                 TextView squareVal = (TextView) convertView.findViewById(R.id.square_value);
                 TextView path = (TextView) convertView.findViewById(R.id.csv_path);
-                if (path.getTag() != null) {
+                /*if (path.getTag() != null) {
                     Integer val = (Integer) path.getTag();
                     int row = val / Project.TABLE_MAX_COLS_COUNT;
                     int col = val % Project.TABLE_MAX_COLS_COUNT;
                     path.removeTextChangedListener(new PathChangeWatcher(row, col));
-                }
+                }*/
 
                 int pathTag = index1 * Project.TABLE_MAX_COLS_COUNT + pointNumber;
 
                 path.setTag(pathTag);
 
-                path.addTextChangedListener(new PathChangeWatcher(index1, pointNumber));
+                //path.addTextChangedListener(new PathChangeWatcher(index1, pointNumber));
 
                 if (paths.get(index1).get(pointNumber) != null) {
                     path.setText(paths.get(index1).get(pointNumber));

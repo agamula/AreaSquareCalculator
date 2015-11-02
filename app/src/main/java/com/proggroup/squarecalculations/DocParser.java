@@ -63,12 +63,14 @@ public class DocParser {
     private static long parseTime(String time) {
         String[] splitValues = time.split(":");
 
-        int minutes = Integer.parseInt(splitValues[0]);
+        int hours = Integer.parseInt(splitValues[0]);
 
-        String secondMillisVal = splitValues[1];
+        int minutes = Integer.parseInt(splitValues[1]);
+
+        String secondMillisVal = splitValues[2];
 
         int seconds = Integer.parseInt(secondMillisVal.substring(0, secondMillisVal.indexOf('.')));
 
-        return TimeUnit.MINUTES.toSeconds(minutes) + TimeUnit.SECONDS.toSeconds(seconds);
+        return TimeUnit.HOURS.toSeconds(hours) + TimeUnit.MINUTES.toSeconds(minutes) + TimeUnit.SECONDS.toSeconds(seconds);
     }
 }
