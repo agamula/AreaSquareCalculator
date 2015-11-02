@@ -95,8 +95,8 @@
     <orderEntry type="library" exported="" name="MPAndroidChart-v2.1.5" level="project" />
     <orderEntry type="library" exported="" name="equation-0.28" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.0.0" level="project" />
-    <orderEntry type="library" exported="" name="core-0.28" level="project" />
     <orderEntry type="library" exported="" name="dense64-0.28" level="project" />
+    <orderEntry type="library" exported="" name="core-0.28" level="project" />
     <orderEntry type="library" exported="" name="denseC64-0.28" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.0.0" level="project" />
     <orderEntry type="library" exported="" name="all-0.28" level="project" />
