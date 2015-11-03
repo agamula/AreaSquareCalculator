@@ -2,20 +2,16 @@ package com.proggroup.areasquarecalculator.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,8 +26,6 @@ import com.proggroup.areasquarecalculator.data.Constants;
 import com.proggroup.areasquarecalculator.data.Project;
 import com.proggroup.areasquarecalculator.db.AvgPointHelper;
 import com.proggroup.areasquarecalculator.db.PointHelper;
-import com.proggroup.areasquarecalculator.db.ProjectHelper;
-import com.proggroup.areasquarecalculator.db.SQLiteHelper;
 import com.proggroup.areasquarecalculator.db.SquarePointHelper;
 import com.proggroup.areasquarecalculator.utils.FloatFormatter;
 import com.proggroup.squarecalculations.CalculateUtils;
@@ -69,9 +63,12 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
     private SquarePointHelper squarePointHelper;
     private AvgPointHelper avgPointHelper;
-    private List<Long> avgPointIds;
+
     private List<List<Float>> squareValues;
     private List<Float> avgValues;
+    private List<Float> ppmValues;
+    private List<Long> avgPointIds;
+
     private List<List<String>> paths;
     private PointHelper mPointHelper;
     private final Fragment fragment;
@@ -84,9 +81,15 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                                      List<Long> avgPointIds) {
         this.fragment = fragment;
         this.onInfoFilledListener = onInfoFilledListener;
+        this.avgPointHelper = avgPointHelper;
+
+        ppmValues = new ArrayList<>(avgPointIds.size());
+
+        for (int i = 0; i < avgPointIds.size(); i++) {
+            ppmValues.add(avgPointHelper.getPpmValue(avgPointIds.get(i)));
+        }
 
         this.avgPointIds = avgPointIds;
-        this.avgPointHelper = avgPointHelper;
 
         squarePointHelper = mSquarePointHelper;
 
@@ -134,9 +137,15 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         checkAvgValues();
     }
 
+    public List<Float> getPpmValues() {
+        return ppmValues;
+    }
+
+    public List<Long> getAvgPointIds() {
+        return avgPointIds;
+    }
 
     /**
-     *
      * @return Square values, calculated from all loaded csv files.
      */
     public List<List<Float>> getSquareValues() {
@@ -144,7 +153,6 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
     }
 
     /**
-     *
      * @return Average square values, calculated for each of rows.
      */
     public List<Float> getAvgValues() {
@@ -157,6 +165,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
      * @param avgPointId Id of new avgPoint is added to database.
      */
     public void notifyAvgPointAdded(long avgPointId) {
+        ppmValues.add(0f);
         avgPointIds.add(avgPointId);
         List<Float> points = new ArrayList<>(Project.TABLE_MAX_COLS_COUNT);
         for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
@@ -192,7 +201,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
             return ITEM_ID_CALC_AVG_RESULT;
         } else if (position % (Project.TABLE_MAX_COLS_COUNT + 3) == 0) {
             return ITEM_ID_KNOWN_PPM;
-        } else if(position % (Project.TABLE_MAX_COLS_COUNT + 3) == Project
+        } else if (position % (Project.TABLE_MAX_COLS_COUNT + 3) == Project
                 .TABLE_MAX_COLS_COUNT + 2) {
             return ITEM_ID_DELETE_ROW;
         } else {
@@ -244,7 +253,15 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 ppmText.setGravity(Gravity.NO_GRAVITY);
 
                 if (ppmText.getTag() != null) {
-                    ppmText.removeTextChangedListener(new PpmWatcher((Integer) ppmText.getTag()));
+                    Integer tag = (Integer) ppmText.getTag();
+                    if (tag != index) {
+                        ppmText.removeTextChangedListener(new PpmWatcher(tag));
+                        ppmText.addTextChangedListener(new PpmWatcher(index));
+                        ppmText.setTag(index);
+                    }
+                } else {
+                    ppmText.addTextChangedListener(new PpmWatcher(index));
+                    ppmText.setTag(index);
                 }
 
                 ppmText.setOnTouchListener(new View.OnTouchListener() {
@@ -259,12 +276,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                     }
                 });
 
-                ppmText.setTag(index);
-                ppmText.addTextChangedListener(new PpmWatcher(index));
-
-                float ppmValue = avgPointHelper.getPpmValue(avgPointIds.get(index));
+                float ppmValue = ppmValues.get(index);
                 if (ppmValue != 0 && index != ppmIndex) {
-                    ppmText.setText((int)ppmValue + "");
+                    ppmText.setText((int) ppmValue + "");
                 }
                 break;
             case ITEM_ID_CALC_AVG_RESULT:
@@ -274,17 +288,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 ppmText.setTextColor(Color.BLACK);
                 ppmText.setGravity(Gravity.CENTER);
 
-                List<Float> squares = squareValues.get(index1);
-                boolean itemsInited = false;
-
-                for (Float square : squares) {
-                    if (square != 0f) {
-                        itemsInited = true;
-                        break;
-                    }
-                }
-
-                if (itemsInited) {
+                if (avgValues.get(index1) != 0f) {
                     ppmText.setText(FloatFormatter.format(avgValues.get(index1)));
                 } else {
                     ppmText.setText("");
@@ -296,38 +300,12 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 int pointNumber = position % (Project.TABLE_MAX_COLS_COUNT + 3) - 1;
 
                 TextView squareVal = (TextView) convertView.findViewById(R.id.square_value);
-                TextView path = (TextView) convertView.findViewById(R.id.csv_path);
-                /*if (path.getTag() != null) {
-                    Integer val = (Integer) path.getTag();
-                    int row = val / Project.TABLE_MAX_COLS_COUNT;
-                    int col = val % Project.TABLE_MAX_COLS_COUNT;
-                    path.removeTextChangedListener(new PathChangeWatcher(row, col));
-                }*/
-
-                int pathTag = index1 * Project.TABLE_MAX_COLS_COUNT + pointNumber;
-
-                path.setTag(pathTag);
-
-                //path.addTextChangedListener(new PathChangeWatcher(index1, pointNumber));
-
-                if (paths.get(index1).get(pointNumber) != null) {
-                    path.setText(paths.get(index1).get(pointNumber));
-                } else {
-                    path.setText("");
-                }
 
                 if (squareValues.get(index1).get(pointNumber) == 0f) {
                     squareVal.setText("");
                 } else {
                     squareVal.setText(FloatFormatter.format(squareValues.get(index1).get
                             (pointNumber)));
-                }
-
-                if (!path.getText().toString().isEmpty()) {
-                    float val1 = CalculateUtils.calculateSquare(new File(path.getText().toString()));
-                    if (val1 > 0) {
-                        squareVal.setText(FloatFormatter.format(val1));
-                    }
                 }
 
                 View csvView = convertView.findViewById(R.id.csv);
@@ -356,12 +334,14 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                     }
                 });
 
-                ppmValue = avgPointHelper.getPpmValue(avgPointIds.get(index1));
+                ppmValue = ppmValues.get(index1);
+
+                int csvTag = index1 * Project.TABLE_MAX_COLS_COUNT + pointNumber;
 
                 if (ppmValue == 0f) {
-                    csvView.setTag(-pathTag - 1);
+                    csvView.setTag(-csvTag - 1);
                 } else {
-                    csvView.setTag(pathTag);
+                    csvView.setTag(csvTag);
                 }
 
                 break;
@@ -372,6 +352,7 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                         int index1 = position / (Project.TABLE_MAX_COLS_COUNT + 3) - 1;
                         avgPointHelper.deleteAvgPoint(avgPointIds.get(index1));
                         avgPointIds.remove(index1);
+                        ppmValues.remove(index1);
                         squareValues.remove(index1);
                         paths.remove(index1);
                         avgValues.remove(index1);
@@ -508,9 +489,11 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         public void afterTextChanged(Editable s) {
             long avgPointId = avgPointIds.get(index);
             if (!s.toString().isEmpty()) {
-                avgPointHelper.updatePpm(avgPointId, Integer.parseInt(s.toString()));
+                ppmValues.set(index, (float) Integer.parseInt(s.toString()));
+                //avgPointHelper.updatePpm(avgPointId, 0);
             } else {
-                avgPointHelper.updatePpm(avgPointId, 0);
+                ppmValues.set(index, 0f);
+                //avgPointHelper.updatePpm(avgPointId, 0);
             }
 
             notifyDataSetChanged();
@@ -519,45 +502,6 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
         @Override
         public boolean equals(Object o) {
             return o != null && o instanceof PpmWatcher && ((PpmWatcher) o).index == index;
-        }
-    }
-
-    /**
-     * Watcher for path changed.
-     */
-    private class PathChangeWatcher implements TextWatcher {
-
-        private final int row, column;
-
-        private PathChangeWatcher(int row, int column) {
-            this.row = row;
-            this.column = column;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if(s.length() != 0) {
-                paths.get(row).set(column, s.toString());
-            }
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o == null || !(o instanceof PathChangeWatcher)) {
-                return false;
-            }
-            PathChangeWatcher watcher = (PathChangeWatcher) o;
-            return watcher.column == column && watcher.row == row;
         }
     }
 }

@@ -102,25 +102,32 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
 
                 List<Float> ppmPoints = new ArrayList<>();
                 List<Float> avgSquarePoints = new ArrayList<>();
-                fillPpmAndSquaresFromDatabase(ppmPoints, avgSquarePoints);
+                boolean isAttached = attachAdapterToDatabase();
 
-                ArrayList<String> ppmStrings = new ArrayList<>(ppmPoints.size());
-                ArrayList<String> squareStrings = new ArrayList<>(avgSquarePoints.size());
+                if (isAttached) {
+                    fillPpmAndSquaresFromDatabase(ppmPoints, avgSquarePoints);
 
-                if (connect0.isChecked()) {
-                    ppmPoints.add(0, 0f);
-                    avgSquarePoints.add(0, 0f);
+                    ArrayList<String> ppmStrings = new ArrayList<>(ppmPoints.size());
+                    ArrayList<String> squareStrings = new ArrayList<>(avgSquarePoints.size());
+
+                    if (connect0.isChecked()) {
+                        ppmPoints.add(0, 0f);
+                        avgSquarePoints.add(0, 0f);
+                    }
+
+                    for (Float ppm : ppmPoints) {
+                        ppmStrings.add(ppm.intValue() + "");
+                    }
+                    for (Float square : avgSquarePoints) {
+                        squareStrings.add(FloatFormatter.format(square));
+                    }
+
+                    callback.startFragmentToDefaultContainer(CurveFragment.newInstance(ppmStrings,
+                            squareStrings), true);
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.input_ppm_first), Toast
+                            .LENGTH_LONG).show();
                 }
-
-                for (Float ppm : ppmPoints) {
-                    ppmStrings.add(ppm.intValue() + "");
-                }
-                for (Float square : avgSquarePoints) {
-                    squareStrings.add(FloatFormatter.format(square));
-                }
-
-                callback.startFragmentToDefaultContainer(CurveFragment.newInstance(ppmStrings,
-                        squareStrings), true);
             }
         });
 
@@ -333,6 +340,20 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 startActivityForResult(intent, SAVE_PPM_AVG_VALUES);
             }
         });
+    }
+
+    private boolean attachAdapterToDatabase() {
+        List<Float> ppmValues = adapter.getPpmValues();
+        List<Long> avgPointIds = adapter.getAvgPointIds();
+
+        for (int i = 0; i < avgPointIds.size(); i++) {
+            if (ppmValues.get(i) == 0f) {
+                return false;
+            } else {
+                mAvgPointHelper.updatePpm(avgPointIds.get(i), ppmValues.get(i));
+            }
+        }
+        return true;
     }
 
     /**
@@ -582,6 +603,12 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
             }
         }
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        attachAdapterToDatabase();
     }
 
     @Override
