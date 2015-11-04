@@ -172,12 +172,20 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
      */
     public void notifyAvgPointAdded(long avgPointId) {
         ppmValues.add(0f);
+        ppmTexts.add("");
         avgPointIds.add(avgPointId);
+        avgTexts.add("");
         List<Float> points = new ArrayList<>(Project.TABLE_MAX_COLS_COUNT);
         for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
             points.add(0f);
         }
         squareValues.add(points);
+
+        List<String> texts = new ArrayList<>(Project.TABLE_MAX_COLS_COUNT);
+        for (int i = 0; i < Project.TABLE_MAX_COLS_COUNT; i++) {
+            texts.add("");
+        }
+        squareTexts.add(texts);
         avgValues.add(new AvgPoint(remove0List(points)).avg());
         notifyDataSetChanged();
     }
@@ -345,11 +353,11 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                         int index1 = position / (Project.TABLE_MAX_COLS_COUNT + 3) - 1;
                         avgPointHelper.deleteAvgPoint(avgPointIds.get(index1));
                         avgPointIds.remove(index1);
-                        squareValues.remove(index1);
+                        ppmValues.remove(index1);
                         ppmTexts.remove(index1);
                         avgTexts.remove(index1);
-                        ppmValues.remove(index1);
                         squareValues.remove(index1);
+                        squareTexts.remove(index1);
                         avgValues.remove(index1);
                         notifyDataSetChanged();
                     }
@@ -485,8 +493,6 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 ppmValues.set(index, 0f);
                 //avgPointHelper.updatePpm(avgPointId, 0);
             }
-
-            notifyDataSetChanged();
         }
 
         @Override

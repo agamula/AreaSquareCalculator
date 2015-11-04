@@ -593,14 +593,14 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
 
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
-            if (SCROLL_STATE_TOUCH_SCROLL == scrollState) {
+            /*if (SCROLL_STATE_TOUCH_SCROLL == scrollState) {
                 if (getActivity() != null) {
                     View currentFocus = getActivity().getCurrentFocus();
                     if (currentFocus != null) {
                         currentFocus.clearFocus();
                     }
                 }
-            }
+            }*/
         }
 
     }
