@@ -483,15 +483,12 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
         @Override
         public void afterTextChanged(Editable s) {
-            long avgPointId = avgPointIds.get(index);
             if (!s.toString().isEmpty()) {
                 ppmTexts.set(index, s.toString());
                 ppmValues.set(index, (float) Integer.parseInt(ppmTexts.get(index)));
-                //avgPointHelper.updatePpm(avgPointId, 0);
             } else {
                 ppmTexts.set(index, "");
                 ppmValues.set(index, 0f);
-                //avgPointHelper.updatePpm(avgPointId, 0);
             }
         }
 
