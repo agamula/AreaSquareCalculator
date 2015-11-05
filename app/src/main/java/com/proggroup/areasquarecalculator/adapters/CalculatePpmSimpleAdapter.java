@@ -299,7 +299,6 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                 int index1 = position / (Project.TABLE_MAX_COLS_COUNT + 3) - 1;
 
                 ppmText = (EditText) convertView.findViewById(R.id.edit);
-                ppmText.setTextColor(Color.BLACK);
                 ppmText.setGravity(Gravity.CENTER);
 
                 ppmText.setText(avgTexts.get(index1));

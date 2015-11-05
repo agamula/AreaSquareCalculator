@@ -17,5 +17,6 @@
         android:digits="0123456789."
         android:imeOptions="actionDone"
         android:inputType="number"
+        android:textColor="@android:color/black"
         android:singleLine="true"/>
 </LinearLayout>
