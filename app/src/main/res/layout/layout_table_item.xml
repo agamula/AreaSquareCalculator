@@ -16,7 +16,8 @@
         <HorizontalScrollView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical">
 
             <TextView
                 android:id="@+id/square_value"
@@ -24,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
-                android:gravity="center"
+                android:layout_gravity="center_horizontal"
                 android:text=""
                 android:textColor="@android:color/black"/>
 
