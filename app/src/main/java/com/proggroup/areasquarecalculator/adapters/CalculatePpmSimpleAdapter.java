@@ -92,7 +92,13 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
 
         for (int i = 0; i < avgPointIds.size(); i++) {
             ppmValues.add(avgPointHelper.getPpmValue(avgPointIds.get(i)));
-            ppmTexts.add("" + ppmValues.get(i).intValue());
+
+            int ppmValue = ppmValues.get(i).intValue();
+            if(ppmValue == 0) {
+                ppmTexts.add("");
+            } else {
+                ppmTexts.add("" + ppmValue);
+            }
         }
 
         this.avgPointIds = avgPointIds;
@@ -316,7 +322,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         Integer tag = (Integer) v.getTag();
 
-                        if (tag < 0) {
+                        int row = tag / Project.TABLE_MAX_COLS_COUNT;
+
+                        if (ppmValues.get(row) == 0) {
                             Toast.makeText(fragment.getActivity(), R.string.input_ppm_first,
                                     Toast.LENGTH_LONG).show();
                             return;
@@ -335,15 +343,9 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                     }
                 });
 
-                float ppmValue = ppmValues.get(index1);
+                int tag = index1 * Project.TABLE_MAX_COLS_COUNT + pointNumber;
 
-                int csvTag = index1 * Project.TABLE_MAX_COLS_COUNT + pointNumber;
-
-                if (ppmValue == 0f) {
-                    csvView.setTag(-csvTag - 1);
-                } else {
-                    csvView.setTag(csvTag);
-                }
+                csvView.setTag(tag);
 
                 break;
             case ITEM_ID_DELETE_ROW:

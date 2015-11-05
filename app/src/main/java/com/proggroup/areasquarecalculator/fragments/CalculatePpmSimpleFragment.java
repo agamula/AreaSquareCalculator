@@ -232,8 +232,20 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 try {
                     List<Float> ppmPoints = new ArrayList<>();
                     List<Float> avgSquarePoints = new ArrayList<>();
-                    fillPpmAndSquaresFromDatabase(ppmPoints, avgSquarePoints);
-                    value = findPpmBySquare(avgValueY, ppmPoints, avgSquarePoints);
+                    boolean isAttached = attachAdapterToDatabase();
+
+                    if (isAttached) {
+                        fillPpmAndSquaresFromDatabase(ppmPoints, avgSquarePoints);
+
+                        if (connect0.isChecked()) {
+                            ppmPoints.add(0, 0f);
+                            avgSquarePoints.add(0, 0f);
+                        }
+
+                        value = findPpmBySquare(avgValueY, ppmPoints, avgSquarePoints);
+                    } else {
+                        throw new Exception();
+                    }
                 } catch (Exception e) {
                     value = -1;
                 }
