@@ -233,7 +233,7 @@ public class FileDialog extends ListActivity {
             f = new File(currentPath);
             files = f.listFiles();
         }
-        myPath.setText(getText(R.string.location) + ": " + currentPath);
+        myPath.setText(getString(R.string.location) + ": " + currentPath);
 
         if (!currentPath.equals(ROOT)) {
 
@@ -346,7 +346,7 @@ public class FileDialog extends ListActivity {
                 }
             } else {
                 new AlertDialog.Builder(this).setIcon(R.drawable.icon)
-                        .setTitle("[" + file.getName() + "] " + getText(R.string.cant_read_folder))
+                        .setTitle("[" + file.getName() + "] " + getString(R.string.cant_read_folder))
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
                             @Override
