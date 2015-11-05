@@ -54,7 +54,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/text_margin_default"
+            android:layout_marginStart="@dimen/text_margin_default">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -74,6 +76,11 @@
                 android:layout_height="wrap_content"
                 android:text="Use (0,0) point"/>
         </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/graph"
@@ -124,15 +131,19 @@
         <Button
             android:id="@+id/calculate_ppm"
             style="@style/ButtonDefaultStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/edit_width"
             android:text="@string/calculate_ppm_simple"/>
 
         <TextView
             android:id="@+id/result_ppm"
             style="@style/TextViewDefaultStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/result_width"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:background="@android:color/white"
+            android:layout_height="@dimen/button_height_default"
             android:layout_gravity="center_vertical"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -182,15 +193,31 @@
             <Button
                 android:id="@+id/calculate_ppm_loaded"
                 style="@style/ButtonDefaultStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/edit_width"
                 android:text="@string/calculate_loaded_ppm_simple"/>
 
             <TextView
                 android:id="@+id/result_ppm_loaded"
                 style="@style/TextViewDefaultStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/result_width"
+                android:textColor="@android:color/black"
+                android:background="@android:color/white"
+                android:gravity="center"
+                android:layout_height="@dimen/button_height_default"
                 android:layout_gravity="center_vertical"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="10dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/graph1"
+                style="@style/ButtonDefaultStyle"
+
+                android:layout_width="wrap_content"
+                android:text="Graph"
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -205,18 +232,4 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"/>
     </HorizontalScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin_default">
-
-        <Button
-            android:id="@+id/graph1"
-            style="@style/ButtonDefaultStyle"
-
-            android:layout_width="wrap_content"
-            android:text="Graph"
-            android:visibility="gone"/>
-    </LinearLayout>
 </LinearLayout>
