@@ -192,8 +192,9 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
             @Override
             public void onClick(View v) {
                 if (avgValueLoaded.getText().toString().isEmpty()) {
-                    Toast.makeText(getActivity(), R.string.input_avg_value, Toast.LENGTH_LONG)
-                            .show();
+                    Activity activity = getActivity();
+                    Toast.makeText(activity, activity.getString(R.string.input_avg_value), Toast
+                            .LENGTH_LONG).show();
                     return;
                 }
                 float avgValueY = Float.parseFloat(avgValueLoaded.getText().toString());
@@ -211,7 +212,9 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 }
 
                 if (value == -1) {
-                    Toast.makeText(getActivity(), R.string.wrong_data, Toast.LENGTH_LONG).show();
+                    Activity activity = getActivity();
+                    Toast.makeText(activity, activity.getString(R.string.wrong_data), Toast
+                            .LENGTH_LONG).show();
                 } else {
                     resultPpmLoaded.setText(FloatFormatter.format(value));
                 }
@@ -223,8 +226,9 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
             @Override
             public void onClick(View v) {
                 if (avgValue.getText().toString().isEmpty()) {
-                    Toast.makeText(getActivity(), R.string.input_avg_value, Toast.LENGTH_LONG)
-                            .show();
+                    Activity activity = getActivity();
+                    Toast.makeText(activity, activity.getString(R.string.input_avg_value), Toast
+                            .LENGTH_LONG).show();
                     return;
                 }
                 float avgValueY = Float.parseFloat(avgValue.getText().toString());
@@ -251,7 +255,9 @@ public class CalculatePpmSimpleFragment extends Fragment implements CalculatePpm
                 }
 
                 if (value == -1) {
-                    Toast.makeText(getActivity(), R.string.wrong_data, Toast.LENGTH_LONG).show();
+                    Activity activity = getActivity();
+                    Toast.makeText(activity, activity.getString(R.string.wrong_data), Toast
+                            .LENGTH_LONG).show();
                 } else {
                     resultPpm.setText(FloatFormatter.format(value));
                 }

@@ -1,5 +1,6 @@
 package com.proggroup.areasquarecalculator.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -324,7 +325,8 @@ public class CalculatePpmSimpleAdapter extends BaseAdapter {
                         int row = tag / Project.TABLE_MAX_COLS_COUNT;
 
                         if (ppmValues.get(row) == 0) {
-                            Toast.makeText(fragment.getActivity(), R.string.input_ppm_first,
+                            Activity activity = fragment.getActivity();
+                            Toast.makeText(activity, activity.getString(R.string.input_ppm_first),
                                     Toast.LENGTH_LONG).show();
                             return;
                         }
