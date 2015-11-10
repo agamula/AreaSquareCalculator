@@ -222,9 +222,9 @@ public class FileDialog extends ListActivity {
 
         currentPath = dirPath;
 
-        final List<String> item = new ArrayList<String>();
-        path = new ArrayList<String>();
-        mList = new ArrayList<HashMap<String, Object>>();
+        final List<String> item = new ArrayList<>();
+        path = new ArrayList<>();
+        mList = new ArrayList<>();
 
         File f = new File(currentPath);
         File[] files = f.listFiles();
@@ -300,11 +300,10 @@ public class FileDialog extends ListActivity {
         fileList.notifyDataSetChanged();
 
         setListAdapter(fileList);
-
     }
 
     private void addItem(String fileName, int imageId) {
-        HashMap<String, Object> item = new HashMap<String, Object>();
+        HashMap<String, Object> item = new HashMap<>();
         item.put(ITEM_KEY, fileName);
         item.put(ITEM_IMAGE, imageId);
         mList.add(item);
